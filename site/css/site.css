@@ -1,0 +1,76 @@
+html, body {
+    margin: 0;
+    padding: 0;
+
+    background-color: #eeeeee;
+    height: 100%;
+    width: 100%;
+    
+    font: 13px/17px "Helvetica", "Arial", sans-serif;
+    color: black;
+}
+
+#page {
+    width: 950px;
+    padding-left: 20px;
+    padding-right: 20px;
+    margin-left: auto;
+    margin-right: auto;
+    
+    border-left: 1px solid silver;
+    border-right: 1px solid silver;
+    background: white;
+    
+    min-height: 100%;
+}
+
+#header {
+    position: relative;
+
+    height: 75px;
+    padding-top: 9px;
+    border-bottom: 1px solid silver;
+    margin-bottom: 20px;
+}
+
+#header p {
+    position: absolute;
+    bottom: 0px;
+    right: 100px;
+}
+
+#header a {
+    
+}
+
+hr {
+    border: none;
+    border-top: 1px solid silver;
+}
+
+#footer {
+    border-top: 1px solid silver;
+    margin-top: 40px;
+    padding: 10px;
+    text-align: right;
+}
+
+#header a, #footer a {
+    color: gray;
+}
+
+#fu-logo {
+    margin-left: 5px;
+    margin-right: 80px;
+    margin-bottom: 12px;
+
+    float: left;
+}
+
+#page.en .de {
+    display: none;
+}
+
+#page.de .en {
+    display: none;
+}

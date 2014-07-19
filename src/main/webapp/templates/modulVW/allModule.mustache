@@ -1,0 +1,486 @@
+<div class="allModule mvsNavigation">
+	<script>
+		var sortAttr = "data-lvname";
+		var sem;
+		var inst;
+		/*======================================== *
+		* ======================================== *
+		* = GETS EXECUTED WHEN DOCUMENT IS READY = *
+		* ======================================== *
+		* ======================================== */
+		$(document).ready(function(){
+			sem = $('.semesterTable').first().attr('data-sId');
+			inst = $('.semesterTable').first().attr('data-iId');
+			if(inst == undefined)
+				inst = 7;
+			if(sem == undefined)
+				sem = 4;
+			
+			$('.semLi-'+sem).addClass('active');
+			$('.stoLi-'+inst).addClass('active');
+			/*$('table.semesterTable').addClass('hidden');
+			$('table.semesterTable-'+sem).removeClass('hidden');
+			
+			$('.stoPanel, .fb').addClass('hidden');
+			$('.fb-1').removeClass('hidden');
+			$('.stoPanel-7').removeClass('hidden');*/
+			
+			// Add lecturer name to lv as attribute
+			$('tr.lv, tr.nRlv').each(function(){
+				var lec = $(this).children('td.lecturers').children().first().attr('data-lname');
+				//alert(lec);
+				$(this).attr('data-lvLec',lec);
+			});
+			
+		});
+		
+		function changeSemester(sId){
+			if(sem != sId){
+				var url = Scuttle.path("/modulVW/moduleListe/"+inst+"/"+sId+"/:allModule");
+				$(location).attr('href',url);
+			}
+		}
+		
+		function changeInstitute(iId){
+			if(inst != iId){ 
+				var url = Scuttle.path("/modulVW/moduleListe/"+iId+"/"+sem+"/:allModule");
+				$(location).attr('href',url);
+			}
+		}
+		
+		/*======================================= *
+		* ========== SIDEBAR TOGGLE =============
+		* ======================================= */
+		$('label.tree-toggler').click(function () {
+			$(this).parent().children('ul.tree').toggleClass('hidden');
+		});
+		
+		var $body = $(document.body);
+		var navHeight = $('.navbar').outerHeight(true)+10;
+		$body.scrollspy({
+			target: '#sidebar',
+			offset: 25
+		});
+		
+		$('#sidebar').affix({
+		      offset: {
+		        top: 25
+		      }
+		});
+		
+		/*======================================= *
+		* =========== SEARCH FUNCTION ===========
+		* ======================================= */
+		$('#searchbar').keyup(function(){
+			var word = $(this).val().toLowerCase();
+			if(word.length > 0){
+				$('#showModuleName').prop('checked',false);
+				$('.module, .nRmodule, .nRmodule-header').addClass('hidden');
+			}
+			$('.lv').each(function(){
+				if($(this).attr('data-lvname').toLowerCase().indexOf(word) == -1 ){
+					$(this).addClass('hidden');
+				}else{
+					$(this).removeClass('hidden');
+				}
+				var row = $(this);
+				$(this).find('small.lecturer').each(function(){
+					if($(this).attr('data-lname').toLowerCase().indexOf(word) != -1){
+						row.removeClass('hidden');
+					}
+				});
+				
+			});
+			
+		});
+		
+		/*======================================= *
+		* ======= SHOW UNREGULARY MODULES =======
+		* ========================================*/
+		$('#showNRModules').change(function(){
+			if($('#showNRModules').prop('checked')){
+				$('.nRlv').removeClass('hidden');
+				if($('#showModuleName').prop('checked'))
+					$('.nRmodule, .nRmodule-header').removeClass('hidden');
+			}else
+				$('.nRmodule, .nRlv, .nRmodule-header').addClass('hidden');
+		});
+		
+		/*======================================= *
+		* ========= SHOW EXTENDED VIEW ==========
+		* ========================================*/
+		$('#showExtendedView').change(function(){
+			if($('#showExtendedView').prop('checked'))
+				$('.lvExtended').removeClass('hidden');
+			else
+				$('.lvExtended').addClass('hidden');
+		});
+		
+		/*======================================= *
+		* =========== HIDE MODULENAME ===========
+		* ========================================*/
+		$('#showModuleName').change(function(){
+			var ext ="";
+			if($('#showModuleName').prop('checked')){
+				if($('#showModuleName').attr('sorted'))
+					ext ="-min";					
+				$('.module'+ext).removeClass('hidden');
+				if($('#showNRModules').prop('checked')){
+					$('.nRmodule'+ext).removeClass('hidden');
+				}	
+			}else{
+				if($('#showModuleName').attr('sorted'))
+					ext ="-min";
+				$('.module'+ext+', .nRmodule'+ext).addClass('hidden');
+			}
+		});
+		
+		function NASortModules(a, b) { 
+		    if (a.innerHTML == 'NA') {
+		        return 1;   
+		    }
+		    else if (b.innerHTML == 'NA') {
+		        return -1;   
+		    }       
+		    return (a.innerHTML > b.innerHTML) ? 1 : -1;
+		};
+		$('.eModuleSelect').each(function(){
+			$(this).children('option').sort(NASortModules).appendTo(this);
+			$(this).children('option:first-child').attr("selected",true);	
+		});
+		
+		/**
+		* SORT FUNCTION FORT TABLE
+		*/
+		function TableSort(a, b) {			
+		    if ($(a).attr(sortAttr) == 'NA') {
+		        return 1;   
+		    }
+		    else if ($(b).attr(sortAttr) == 'NA') {
+		        return -1;   
+		    }
+		    if($(a).parents('table').hasClass('asc'))
+		        return ($(a).attr(sortAttr) > $(b).attr(sortAttr)) ? 1 : -1;
+		    else
+		        return ($(a).attr(sortAttr) < $(b).attr(sortAttr)) ? 1 : -1;
+		};
+		function sort(table,attr){
+			$('#showModuleName').prop('checked',false);
+			$('#showModuleName').attr('sorted',true);
+			$('.module, .nRmodule, .nRmodule-header').addClass('hidden');
+			$('.module-min').remove();
+			sortAttr = attr;
+			var tbo = $(table).toggleClass('asc').children('tbody');
+			tbo.children('tr').sort(TableSort).appendTo(tbo);
+			
+			$('.lv, .nRlv').each(function(){
+				if($(this).prev('.lv, .nRlv').attr('data-mId') != $(this).attr('data-mId'))
+					$(this).before('<tr class="module-min hidden" data-mName="'+$(this).attr("data-mName")+
+							'" data-mTyp='+$(this).attr("data-mTyp")+
+							'" data-mArt="'+$(this).attr("data-lvArt")+'">'+
+							'<th></th><th colspan="2">Modul: '+$(this).attr("data-mName")+'</th>'+
+							'<th>'+$(this).attr("data-mNummer")+'</th><th colspan="3"></th></tr>'
+							);
+			});			
+		}
+		
+	</script>
+	
+	<p id="mvsExport">
+	{{#loginname}}
+		Export: 
+		<a href="/mvs/backend/modulVW/export/semester/3" target="_blank">SS14</a>  |  
+		<a href="/mvs/backend/modulVW/export/semester/4" target="_blank">WS14/15</a>
+		Detaillierter Export:
+		<a href="/mvs/backend/modulVW/detailed/semester/3" target="_blank">SS14</a>  |  
+		<a href="/mvs/backend/modulVW/detailed/semester/4" target="_blank">WS14/15</a> 
+	{{/loginname}}
+	</p>
+	<!-- start: navbar -->
+	<nav class="navbar navbar-default" role="navigation" id="topNavigation">
+		<div class="container-fluid navigation-container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example">
+					<span class="sr-only">Toggle Navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>				
+				</button>
+				<a class="navbar-brand" data-go="//moduleListe:allModule">MVS</a>
+			</div>
+			<!-- start: Nav -->
+			<div class="collapse navbar-collapse" id="bs-example">
+				<ul class="nav navbar-nav">
+					<li class="active"><a data-go="//moduleListe:allModule">Alle Veranstaltungen</a></li>
+					<li><a {{#loginname}}data-go="//meineModule:meineModule"{{/loginname}}>Meine  Veranstaltungen</a></li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Langfristplanung <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a {{#loginname}}data-go="//langfristPlanung/7/3/:langfristplanung"{{/loginname}}>Informatik</a></li>	
+							<li class="divider"></li>
+							<li><a {{#loginname}}data-go="//langfristPlanung/8/3/:langfristplanung"{{/loginname}}>Mathematik</a></li>
+							<li class="divider"></li>
+							<li><a {{#loginname}}data-go="//langfristPlanung/10/3/:langfristplanung"{{/loginname}}>Physik</a></li>
+							<li class="divider"></li>
+							<li><a {{#loginname}}data-go="//langfristPlanung/11/3/:langfristplanung"{{/loginname}}>Bioinformatik</a></li>				
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Modulverwaltung <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a {{#loginname}}data-go="//newModule:neuesModul"{{/loginname}}>Neues Modul</a></li>
+							<li><a {{#loginname}}data-toggle="modal" data-target=".mod-editModule-modal"{{/loginname}}>Modul Bearbeiten</a></li>
+							<li><a {{#loginname}}data-go="//newCourse:newCourse"{{/loginname}}>Neue Veranstaltung</a></li>
+							<li><a {{#loginname}}data-toggle="modal" data-target=".mod-lecturer-modal"{{/loginname}}>Neuer Dozent</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Einstellungen<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a {{#loginname}}data-toggle="modal" data-target=".mod-sto-modal"{{/loginname}}>Neue Studienordnung anlegen</a></li>
+							<li><a href="#">DB-Daten</a></li>
+						</ul>
+					</li>
+				</ul>
+				<form class="navbar-form navbar-right">
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="Suche" id="searchbar">									
+					</div>
+				</form>
+			</div>
+		<!-- end: nav -->
+		</div>
+	</nav>
+	<!-- end: navbar -->
+	
+	<!--  START: BODY CONTAINER -->
+	<div class="container-fluid bodyContainer" id="bContainer">
+		<!-- start: Sidebar -->
+		<div class="col-md-2 sidebar">
+			<div class="well well-md" id="sidebar">
+				<ul class="nav nav-pills nav-stacked">
+					<li>Modulname anzeigen <input type="checkbox" id="showModuleName" checked></li>
+					<li class="nav-divider"></li>
+					<li>Ausgeweitete Sicht <input type="checkbox" id="showExtendedView"></li>
+					<li class="nav-divider"></li>
+					<li>Unregelm&auml;&szlig;ige Module <input type="checkbox" id="showNRModules"></li>
+					<li class="nav-divider"></li>
+					<li><label class="tree-toggler nav-header">Semester <b class="caret"></b></label>
+						<ul class="nav nav-pills nav-stacked tree active-trial hidden">
+						{{#sem}}
+							<li class="semLi semLi-{{sId}}"><a data-do="changeSemester({{sId}});">{{sName}}</a></li>
+						{{/sem}}
+						</ul>
+					</li>
+					<li class="nav-divider"></li>
+					<li><label class="tree-toggler nav-header">Studienfach<b class="caret"></b></label>
+						<ul class="nav nav-pills nav-stacked tree hidden">
+							<!-- <li class="stoLi">
+								<a data-do="$('ul.tree').addClass('hidden'); $('div.fb').removeClass('hidden'); $('div.stoPanel').removeClass('hidden'); $('.stoLi').removeClass('active'); $(this).parent().addClass('active');">Alle</a>
+							</li>-->
+							<li class="stoLi stoLi-7">
+								<a data-do="changeInstitute(7);">Informatik</a>
+							</li>
+							<li class="stoLi stoLi-8">
+								<a data-do="changeInstitute(8);">Mathematik</a>
+							</li>
+							<li class="stoLi stoLi-11">
+								<a data-do="changeInstitute(10);"">Physik</a>
+							</li>
+							<li class="stoLi stoLi-10">
+								<a data-do="changeInstitute(11);">Bioinformatik</a>
+							</li>
+							<li class="stoLi stoLi-6">
+								<a data-do="changeInstitute(6);">Keine STO</a>
+							</li>
+						</ul>
+					</li>
+					<li class="nav-divider"></li>
+					<!-- <li><label class="tree-toggler nav-header">Modulart<b class="caret"></b></label>
+						<ul class="nav nav-pills nav-stacked tree hidden">
+							<li class="typLi">
+								<a data-do="$('tr.module').removeClass('hidden'); $('tr.lv').removeClass('hidden'); $('.typLi').removeClass('active'); $(this).parent().addClass('active');">Alle</a>
+							</li>
+							<li class="typLi active">
+								<a data-do="$('tr.module').addClass('hidden'); $('tr.module-type-1').removeClass('hidden'); $('tr.lv').addClass('hidden'); $('tr.lv-type-1').removeClass('hidden'); $('.typLi').removeClass('active'); $(this).parent().addClass('active');">Pflicht</a>
+							</li>
+							<li class="typLi active">
+								<a data-do="$('tr.module').addClass('hidden'); $('tr.module-type-2').removeClass('hidden'); $('tr.lv').addClass('hidden'); $('tr.lv-type-2').removeClass('hidden'); $('.typLi').removeClass('active'); $(this).parent().addClass('active');">Regelm&auml;&szlig;ige</a>
+							</li>
+							<li class="typLi">
+								<a data-do="$('tr.module').addClass('hidden'); $('tr.module-type-3').removeClass('hidden'); $('tr.lv').addClass('hidden'); $('tr.lv-type-3').removeClass('hidden'); $('.typLi').removeClass('active'); $(this).parent().addClass('active');">Einmalige</a>
+							</li>
+							<li class="typLi">
+								<a data-do="$('tr.lv').addClass('hidden'); $('tr.lv-type-4').removeClass('hidden'); $('.typLi').removeClass('active'); $(this).parent().addClass('active');">Forschungsseminar</a>
+							</li>
+						</ul>
+					</li>-->
+				</ul>
+				
+			</div>
+		</div>
+		<!--  End Sidebar -->
+		
+		<!-- START: WELL FOR EVERY FB -->
+		<div class="container-fluid wellContainer">
+			<div class="well col-md-10">
+			{{#fachbereiche}}
+			<div class="fb fb-{{fbId}}">
+				<h1 class="text-center fb-heading">{{fbName}}</h1>
+				{{#institute}}
+					<!-- One Panel for each STA from current institute -->
+					{{#sta}}
+					<div class="panel panel-primary stoPanel stoPanel-{{iId}} sta-{{staId}}">
+						<div class="panel-heading" id="panelHeadin-{{iId}}-{{staId}}">
+							<h2 class="panel-title text-center">{{staName}} {{iName}}</h2>			
+						</div>
+						{{^semester}}
+						{{/semester}}
+						{{#semester}}
+						<table class="table table-hover table-responsive semesterTable semesterTable-{{sId}} asc" id="semesterTable-{{iId}}-{{staId}}-{{sId}}" data-sId="{{sId}}" data-iId="{{iId}}">
+							<thead>
+								<tr>
+									<th>Lv-Nr</th>
+									<th>
+										Typ
+										<a class="linkIcons pull-right sortTyp" data-do="sort('#semesterTable-{{iId}}-{{staId}}-{{sId}}','data-lvt');">
+									 		<span class="glyphicon glyphicon-sort"></span>
+									 	</a>
+									</th>
+									<th>
+										Name
+										<a class="linkIcons pull-right sortName" data-do="sort('#semesterTable-{{iId}}-{{staId}}-{{sId}}','data-lvName');">
+									 		<span class="glyphicon glyphicon-sort"></span>
+									 	</a>
+									</th>
+									<th>Zeit und Ort</th>
+									<th>
+										Dozent
+										<a class="linkIcons pull-right sortLec" data-do="sort('#semesterTable-{{iId}}-{{staId}}-{{sId}}','data-lvLec');">
+									 		<span class="glyphicon glyphicon-sort"></span>
+									 	</a>
+									</th>
+									<th>SWS</th>
+									<th>
+										Art
+										<a class="linkIcons pull-right sortArt" data-do="sort('#semesterTable-{{iId}}-{{staId}}-{{sId}}','data-lvArt');">
+									 		<span class="glyphicon glyphicon-sort"></span>
+									 	</a>
+									</th>
+									<th class="hidden lvExtended">M-Nr.</th>
+								</tr>
+							</thead>
+							<tbody>
+								{{#module}}
+									<tr class="module module-{{mId}} moduleType-{{mTyp}}" data-mName="{{mName}}" data-mTyp={{mTyp}} data-mArt={{mArt}}>
+										<th></th>
+										<th colspan="2">Modul: {{mName}}</th>
+										<th>{{#mNummer}}({{mNummer}}){{/mNummer}}</th>
+										<th colspan="3"></th>
+									</tr>
+									{{#mlvs}}
+									{{#lvs}}
+									<tr class="lv lv-{{lvId}} lv-type-{{mTyp}}" data-lvt="{{lvTyp}}" data-lvLec="{{lvLec}}" data-lvName="{{lvName}}" data-lvArt="{{mArt}}" data-mName="{{mName}}" data-mTyp={{mTyp}} data-mNummer="{{#mNummer}}({{mNummer}}){{/mNummer}}" data-mId="{{mId}}">
+										<td><small>{{lvNummer}}</small></td>
+										<td><small>{{lvTyp}}</small></td>
+										<td>
+											<a {{#loginname}}data-go="//planLv/{{lvId}}/{{sId}}/:lvPlanung"{{/loginname}}>{{lvName}}</a>
+										</td>
+										<td>
+										{{#termine}}
+											<small class="termin termin-{{tId}}-{{pid}} text-left td-fullwidth">
+											{{tTag}} {{tVon}}-{{tBis}} Uhr / {{gKuerzel}} Raum {{rKuerzel}} {{#tStart}}({{tStart}}-{{tEnde}}){{/tStart}}
+											</small><br>
+										{{/termine}}
+										</td>
+										<td class="lecturers">
+										{{#dozenten}}
+											<small class="lecturer lecturer-{{lId}} text-left td-fullwidth" data-lname="{{lVorname}} {{lNachname}}">
+												{{lVorname}} {{lNachname}}												
+											</small><br>
+										{{/dozenten}}
+										</td>
+										<td><small>{{lvSws}}</small></td>
+										<td><small>{{mArt}}</small></td>	
+										<td class="hidden lvExtended">
+											<small>{{mNummer}}</small>
+											{{#huelsen}}
+												<br>
+												<small data-hId="{{hId}}">{{hKuerzel}}</small>
+											{{/huelsen}}
+										</td>									
+									</tr>
+									{{/lvs}}
+									{{/mlvs}}
+								{{/module}}
+								<tr class="info nRmodule-header hidden">
+									<th colspan="7">Unregelm&auml;&szlig;ge Veranstaltungen und Forschungsseminare</th>
+								</tr>
+								{{#nRModule}}
+									<tr class="nRmodule nRmodule-{{mId}} moduleType-{{mTyp}} hidden" data-mName="{{mName}}" data-mTyp={{mTyp}} data-mArt={{mArt}}>
+										<th></th>
+										<th colspan="2">Modul: {{mName}}</th>
+										<th>{{#mNummer}}({{mNummer}}){{/mNummer}}</th>
+										<th colspan="3"></th>
+									</tr>
+									{{#mlvs}}
+									{{#lvs}}
+									<tr class="nRlv nRlv-{{lvId}} hidden" data-lvt="{{lvTyp}}" data-lvLec="{{lvLec}}" data-lvName="{{lvName}}" data-lvArt="{{mArt}}"  data-mName="{{mName}}" data-mTyp={{mTyp}} data-mNummer="{{#mNummer}}({{mNummer}}){{/mNummer}}" data-mId="{{mId}}">
+										<td><small>{{lvNummer}}</small></td>
+										<td><small>{{lvTyp}}</small></td>
+										<td>
+											<a {{#loginname}}data-go="//planLv/{{lvId}}/{{sId}}/:lvPlanung"{{/loginname}}>{{lvName}}</a>
+										</td>
+										<td>
+										{{#termine}}
+											<small class="termin termin-{{tId}}-{{pid}} text-left td-fullwidth">
+											{{tTag}} {{tVon}}-{{tBis}} Uhr / {{gKuerzel}} Raum {{rKuerzel}} {{#tStart}}({{tStart}}-{{tEnde}}){{/tStart}}
+											</small><br>
+										{{/termine}}
+										</td>
+										<td class="lecturers">
+										{{#dozenten}}
+											<small class="lecturer lecturer-{{lId}} text-left td-fullwidth" data-lname="{{lVorname}} {{lNachname}}">
+												{{lVorname}} {{lNachname}}												
+											</small><br>
+										{{/dozenten}}
+										</td>
+										<td><small>{{lvSws}}</small></td>
+										<td><small>{{mArt}}</small></td>	
+										<td class="hidden lvExtended">
+											<small>{{mNummer}}</small>
+											{{#huelsen}}
+												<br>
+												<small data-hId="{{hId}}">{{hKuerzel}}</small>
+											{{/huelsen}}
+										</td>									
+									</tr>
+									{{/lvs}}
+									{{/mlvs}}
+								{{/nRModule}}							
+							</tbody>
+						</table>
+						{{/semester}}
+					</div><!-- END STA-PANEL -->					
+					{{/sta}}
+				{{/institute}}				
+			</div> <!-- END FB-DIV -->			
+			{{/fachbereiche}}
+			</div>
+		</div>
+		<!-- END: WELL FOR EVERY FB -->		
+	
+	</div>
+	<!-- END: BODY CONTAINER -->
+	
+	<!-- =============================================== -->	
+	<!-- ====== START: Import Mustache-Partials ======== -->
+	<!-- =============================================== -->
+	{{>loginTemplate}}
+	{{>editModuleTemplate}}
+	{{>newLecturerTemplate}}
+	{{>newSTOTemplate}}
+	<!-- =============================================== -->	
+	<!-- ====== END: Import Mustache-Partials ======== -->
+	<!-- =============================================== -->
+</div>

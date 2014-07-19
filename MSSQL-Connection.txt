@@ -1,0 +1,30 @@
+$:
+
+java -Djsse.enableCBCProtection=false -cp .:jtds-1.3.1.jar TestConnect \
+    'jdbc:jtds:sqlserver://ilvdb01.basis.fu-berlin.de:1435;ssl=require;databaseName=Evento_Prod;user=kvvexport;password=evento_$44' \
+    kvvexport \
+    'evento_$44'
+ 
+TestConnection.java:
+ 
+import java.sql.Connection;
+import java.sql.DriverManager;
+import java.sql.ResultSet;
+import java.sql.SQLException;
+
+public class TestConnect {
+
+    public static void main(String... args) throws SQLException {
+        if (args.length != 3) {
+            System.out.println("Usage: java -cp=.:<driver>.jar TestConnect <url> <user> <password>");
+            return;
+        }
+        
+        String url = args[0];
+        String username = args[1];
+        String password = args[2];
+        
+        Connection c = DriverManager.getConnection(url, username, password);
+        System.out.println("CONNECTED");
+    }
+}

@@ -1,0 +1,44 @@
+<h1>Hello, world!</h1>
+
+<p id="menu">
+    <a href="/scuttle/backend/helloWorld/helloWorld.xml">helloWorld.xml</a> |
+    <a href="/mvs/backend/helloWorld/helloWorld.pdf">helloWorld.pdf</a>
+</p>
+
+<p>Current time: {{currentTime}}.</p>
+
+<p id="something">
+    <a onclick="Scuttle.getModule('helloWorld').doSomething()">
+        Do Something!
+    </a>
+</p>
+
+<p>
+    Links can be created with the <code>data-go</code> attribute
+    on an <code>a</code> element:
+</p>
+
+<pre>
+    &lt;a data-go=":helloAlternative"&gt;Alternative Version&lt;/a&gt;
+</pre>
+
+<p>
+    <a data-go=":helloAlternative">Alternative Version</a>
+</p>
+
+<p>
+    A template can be exchanged without refetching the data by specifiying
+    only the template (like above).
+</p>
+
+<p>
+    Links within the same module can be created by prepending <code>//</code>
+    (two slashes):
+</p>
+
+<pre>
+    &lt;a data-go="//helloWorld:showcase"&gt;Go to showcase.&lt;/a&gt;
+</pre>
+
+<p><a data-go="//helloWorld:showcase">Go to showcase.</a></p>
+

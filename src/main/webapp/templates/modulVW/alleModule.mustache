@@ -1,0 +1,549 @@
+<div class="alleModule">
+<script>
+	$(document).ready(function(){
+		var sem = 3;
+		$('table.semester').addClass('hidden');
+		$('table.semester-'+sem).removeClass('hidden').fadeIn(500);
+		
+		$('table.semester').each(function(){
+			var tbo = $(this).children('tbody');
+			tbo.children().sort(NASort).appendTo(tbo);	
+		});
+		
+		$('.module[data-mtyp="3"]').addClass('hidden');
+	});
+	
+	/*
+	* Sidebar toggle
+	*/
+	$('label.tree-toggler').click(function () {
+		  $(this).parent().children('ul.tree').toggleClass('hidden');
+		});
+	
+	$('#logLink').click(function(){
+		var name = $('#loginUname').val();
+		var pwd = $('#loginPw').val();
+		var updates = {
+				"username" : name,
+				"pwd" : pwd
+			};
+			
+			$.ajax({
+				url: Scuttle.path('/backend/modulVW/login'),
+				type: "POST",
+				data: updates
+			}).done(function(data){
+				if(typeof data.wrongUser === 'undefined'){
+					if(!data.pwd){
+						alert("Wrong Password");
+					}else{
+						var url = Scuttle.path("/modulVW/moduleList:alleModule");
+						$(location).attr('href',url);
+					}
+				}else{
+					if(data.wrongUser)
+						alert("wrong user");
+					else{
+						alert("First Login");
+						var url = Scuttle.path("/modulVW/:firstLogin");
+						$(location).attr('href',url);
+					}
+				}
+			}).fail(function(req,text,error){
+				
+			});
+			
+			$('#login-modal').modal('hide');
+			$('#loginUname').val('');
+			$('#loginUPw').val('');
+	});
+	
+	/*
+	* Sortierfunktion fuier Tabelle
+	*/
+	function NASort(a, b) { 
+	    if ($(a).attr('data-mname') == 'NA') {
+	        return 1;   
+	    }
+	    else if ($(b).attr('data-mname') == 'NA') {
+	        return -1;   
+	    }
+	    if($(a).parents('table').hasClass('asc'))
+	        return ($(a).attr('data-mname') > $(b).attr('data-mname')) ? 1 : -1;
+	    else
+	        return ($(a).attr('data-mname') < $(b).attr('data-mname')) ? 1 : -1;
+	};
+	
+	$('.sortName').click(function(){
+		var tbo = $(this).parents('table').toggleClass('asc').children('tbody');
+		tbo.children().sort(NASort).appendTo(tbo);
+	});
+	
+	function NASortTyp(a, b) { 
+	    if ($(a).attr('data-mlvt') == 'NA') {
+	        return 1;   
+	    }
+	    else if ($(b).attr('data-mlvt') == 'NA') {
+	        return -1;   
+	    }
+	    if($(a).parents('table').hasClass('asc'))
+	        return ($(a).attr('data-mlvt') > $(b).attr('data-mlvt')) ? 1 : -1;
+	    else
+	        return ($(a).attr('data-mlvt') < $(b).attr('data-mlvt')) ? 1 : -1;
+	};
+	$('.sortTyp').click(function(){
+		var tbo = $(this).parents('table').toggleClass('asc').children('tbody');
+		tbo.children().sort(NASortTyp).appendTo(tbo);
+	});
+	
+	function NASortArt(a, b) { 
+	    if ($(a).attr('data-mtyp') == 'NA') {
+	        return 1;   
+	    }
+	    else if ($(b).attr('data-mtyp') == 'NA') {
+	        return -1;   
+	    }
+	    if($(a).parents('table').hasClass('asc'))
+	        return ($(a).attr('data-mtyp') > $(b).attr('data-mtyp')) ? 1 : -1;
+	    else
+	        return ($(a).attr('data-mtyp') < $(b).attr('data-mtyp')) ? 1 : -1;
+	};
+	$('.sortArt').click(function(){
+		var tbo = $(this).parents('table').toggleClass('asc').children('tbody');
+		tbo.children().sort(NASortTyp).appendTo(tbo);
+	});
+	
+	function NASortLec(a, b) { 
+	    if ($(a).attr('data-mlec') == 'NA') {
+	        return 1;   
+	    }
+	    else if ($(b).attr('data-mlec') == 'NA') {
+	        return -1;   
+	    }
+	    if($(a).parents('table').hasClass('asc'))
+	        return ($(a).attr('data-mlec') > $(b).attr('data-mlec')) ? 1 : -1;
+	    else
+	        return ($(a).attr('data-mlec') < $(b).attr('data-mlec')) ? 1 : -1;
+	};
+	$('.sortLec').click(function(){
+		var tbo = $(this).parents('table').toggleClass('asc').children('tbody');
+		tbo.children().sort(NASortLec).appendTo(tbo);
+	});
+	
+	/* Suchfunktion */
+	$('#searchbar').keyup(function(){
+		var word = $(this).val().toLowerCase();
+		$('.module').each(function(){
+			if($(this).attr('data-mname').toLowerCase().indexOf(word) == -1 ){
+				$(this).addClass('hidden');
+			}else{
+				$(this).removeClass('hidden');
+			}
+			var row = $(this);
+			$(this).find('small.lecturer').each(function(){
+				if($(this).attr('data-lname').toLowerCase().indexOf(word) != -1){
+					row.removeClass('hidden');
+				}
+			});
+			
+		});
+		
+	});
+	
+	/*================================================*
+	* Add new LEcturer to DB
+	*=================================================*/
+	$('#addLecturer').click(function(){
+		var lVname = $('#lVorname').val();
+		var lNname = $('#lNachname').val();
+		var lTypId = $('#lTypSelect option:selected').val();
+		var lZedat = $('#lZedat').val();
+		var lEmail = $('#lEmail').val();
+		var lTyp = $('#lTypSelect option:selected').text();
+		
+		if(lVname.length == 0){
+			$('#lVorname').parent().addClass('has-error');
+			$('#lVorname').parent().append('<span id="controlvname" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+		}
+		if(lNname.length == 0){
+			$('#lNachname').parent().addClass('has-error');
+			$('#lNachname').parent().append('<span id="controlnname" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+		}
+		if(lVname.length > 0 && lNname.length > 0){
+			var lec = {
+				"typ": lTypId,
+				"vorname": lVname,
+				"nachname": lNname,
+				"zedat": lZedat,
+				"email": lEmail				
+			};
+				
+			$.ajax({
+				url: Scuttle.path('/backend/modulVW/saveLecturer'),
+				type: "POST",
+				data: lec
+			}).done(function(data){
+				if(!data.lExists){
+					// Erfolgreich hinzugefuegt				
+					$('#validateLecturer').removeClass('hidden').text(lTyp + ' wurde erfoglreich hinzugefuegt.').addClass('alert-success');
+					setTimeout(function(){
+						$('#validateLecturer').addClass('hidden').removeClass('alert-success',1500).text("");
+						$('#lecturer-modal').modal('hide');
+					},1500);
+	
+					$('#lVorname').val("");
+					$('#lNachname').val("");
+					$('#lZedat').val("");
+					$('#lEmail').val("");
+					
+					$('.has-error').removeClass('has-error');
+					$('.has-success').removeClass('has-success');
+					$('#controlvname, #controlnname').remove();
+				}else{
+					// Zedat-Account existiert bereits
+					$('#validateLecturer').removeClass('hidden').addClass('alert-danger').text("Es exitiert bereits jemand mit dem Zedat-Account "+lZedat+".");
+					setTimeout(function(){
+						$('#validateLecturer').addClass('hidden').removeClass('alert-danger',1500).text("");
+					},1500);
+					$('#lZedat').focus();
+				}
+			}).fail(function(req,text,error){
+				alert("Ein unerwarteter Fehler ist aufgetreten.");
+			});
+		}
+		
+	});
+
+	
+	$('#lVorname, #lNachname').keydown(function(){
+		$(this).parent().removeClass('has-error');
+		$(this).parent().children('span').remove();
+		if($(this).val().length > 0){
+			$(this).parent().parent().addClass('has-success');
+			$(this).parent().append('<span id="controlvname" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+		}else{
+			$(this).parent().parent().removeClass('has-success');
+		}
+	});
+	
+	</script>
+	<!-- Start: Login Modal -->
+	<div class="modal fade mod-login-modal" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true" id="login-modal">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header text-center">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h2 class="modal-title">Login</h2>
+				</div>
+				<div class="modal-body">
+				<input type="text" id="loginUname" class="form-control" placeholder="Benutzername" required="required">
+				<input type="password" id="loginPw" class="form-control" placeholder="Passwort" required="required">
+				</div>
+				<div class="modal-footer">
+					<div class="text-center">						
+						<a id="logLink" class="btn btn-success signin">Login</a>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Schliessen</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Login Modal -->
+
+		<p id="mvsMenu">
+			{{^loginname}}
+			<a class="btn btn-link" data-toggle="modal" data-target=".mod-login-modal">
+					Login
+			</a>
+			{{/loginname}}
+			{{#loginname}}
+			Hallo {{loginname}} <a data-go="//logout:alleModule">Logout</a>
+			<br>
+			<a href="/mvs/backend/modulVW/export/sem/3" target="_blank">SS14 Export</a>  |  
+			<a href="/mvs/backend/modulVW/export/sem/4" target="_blank">WS14/15 Export</a>
+			{{/loginname}}
+        </p>
+                
+		<!-- start: navbar -->
+		<nav class="navbar navbar-default" role="navigation" id="topNavigation">
+			<div class="container-fluid navigation-container">
+				<div class="navbar-header">
+					<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example">
+						<span class="sr-only">Toggle Navigation</span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>
+						<span class="icon-bar"></span>				
+					</button>
+					<a class="navbar-brand" data-go="//moduleList:alleModule">MVS</a>
+				</div>
+
+				<!-- start: Nav -->
+				<div class="collapse navbar-collapse" id="bs-example">
+					<ul class="nav navbar-nav">
+						<li class="active"><a data-go="//moduleList:alleModule">Alle Veranstaltungen</a></li>
+						<li class="disabled"><a href="#">Meine  Veranstaltungen</a></li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Langfristplanung <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+								<li><a {{#loginname}}data-go="//langfristPlanung/7/3/:langfristplanung"{{/loginname}}>Informatik</a></li>	
+								<li class="divider"></li>
+								<li><a {{#loginname}}data-go="//langfristPlanung/8/3/:langfristplanung"{{/loginname}}>Mathematik</a></li>
+								<li class="divider"></li>
+								<li><a {{#loginname}}data-go="//langfristPlanung/10/3/:langfristplanung"{{/loginname}}>Physik</a></li>
+								<li class="divider"></li>
+								<li><a {{#loginname}}data-go="//langfristPlanung/11/3/:langfristplanung"{{/loginname}}>Bioinformatik</a></li>				
+							</ul>
+						</li>
+						<li class="dropdown">
+							<a href="#" class="dropdown-toggle" data-toggle="dropdown">Modulverwaltung <b class="caret"></b></a>
+							<ul class="dropdown-menu">
+									<li><a {{#loginname}}data-go="//newModule:newModule"{{/loginname}}>Neues Modul</a></li>
+									<!--<li><a {{#loginname}}data-go="//newModule:newModule"{{/loginname}}>Modul Bearbeiten</a></li>-->
+									<!-- <li><a {{#loginname}}data-go="//newCourse:newCourse"{{/loginname}}>Neue Veranstaltung</a></li>-->
+									<li><a {{#loginname}}data-toggle="modal" data-target=".mod-lecturer-modal"{{/loginname}}>Neuer Dozent</a></li>
+							</ul>
+						</li>
+					</ul>
+					<form class="navbar-form navbar-right">
+						<div class="form-group">
+								<input type="text" class="form-control" placeholder="Suche" id="searchbar">									
+						</div>
+					</form>
+				</div>
+				<!-- end: nav -->
+			</div>
+		</nav>
+		<!-- end: navbar -->
+		<div class="container-fluid bodyContainer">
+			<!-- start: Sidebar -->
+			<div class="col-md-2 sidebar">
+		  		<div class="well well-md" id="sidebar">
+		          <ul class="nav nav-pills nav-stacked">
+		              <li><label class="tree-toggler nav-header">Semester <b class="caret"></b></label>
+		                  <ul class="nav nav-pills nav-stacked tree active-trial hidden">
+		                  {{#sem}}
+		                      <li class="semLi"><a data-do="$('table.semester').addClass('hidden'); $('table.semester-{{sId}}').removeClass('hidden'); $('.semLi').removeClass('active'); $(this).parent().addClass('active');">{{sName}}</a></li>
+		                  {{/sem}}
+		                  </ul>
+		              </li>
+		              <li class="nav-divider"></li>
+		              <li><label class="tree-toggler nav-header">Studiengang<b class="caret"></b></label>
+						<ul class="nav nav-pills nav-stacked tree hidden">
+							<li class="stoLi">
+								<a data-do="$('div.stoPanel').removeClass('hidden'); $('.stoLi').removeClass('active'); $(this).parent().addClass('active');">Alle</a>
+							</li>
+							<li class="stoLi active">
+								<a data-do="$('div.stoPanel').addClass('hidden'); $('div.stoPanel-7').removeClass('hidden'); $('.stoLi').removeClass('active');  $(this).parent().addClass('active');">Informatik</a>
+							</li>
+							<li class="stoLi">
+								<a data-do="$('div.stoPanel').addClass('hidden'); $('div.stoPanel-8').removeClass('hidden'); $('.stoLi').removeClass('active'); $(this).parent().addClass('active');">Mathematik</a>
+							</li>
+							<li class="stoLi">
+								<a data-do="$('div.stoPanel').addClass('hidden'); $('div.stoPanel-10').removeClass('hidden'); $('.stoLi').removeClass('active'); $(this).parent().addClass('active');">Physik</a>
+							</li>
+							<li class="stoLi">
+								<a data-do="$('div.stoPanel').addClass('hidden'); $('div.stoPanel-11').removeClass('hidden'); $('.stoLi').removeClass('active'); $(this).parent().addClass('active');">Bioinformatik</a>
+							</li>
+							<li class="stoLi">
+								<a data-do="$('div.stoPanel').addClass('hidden'); $('div.stoPanel-6, div.stoPanel-9').removeClass('hidden'); $('.stoLi').removeClass('active'); $(this).parent().addClass('active');">Keine STO</a>
+							</li>
+						</ul>
+		              </li>
+		              <li class="nav-divider"></li>
+		              <li><label class="tree-toggler nav-header">Modulart<b class="caret"></b></label>
+						<ul class="nav nav-pills nav-stacked tree hidden">
+							<li class="typLi">
+								<a data-do="$('tr.module').removeClass('hidden'); $('.typLi').removeClass('active'); $(this).parent().addClass('active');">Alle</a>
+							</li>
+							<li class="typLi active">
+								<a data-do="$('tr.module').addClass('hidden'); $('tr.module-type-1').removeClass('hidden'); $('.typLi').removeClass('active'); $(this).parent().addClass('active');">Pflicht</a>
+							</li>
+							<li class="typLi active">
+								<a data-do="$('tr.module').addClass('hidden'); $('tr.module-type-2').removeClass('hidden'); $('.typLi').removeClass('active'); $(this).parent().addClass('active');">Regelm&auml;&szlig;ige</a>
+							</li>
+							<li class="typLi">
+								<a data-do="$('tr.module').addClass('hidden'); $('tr.module-type-3').removeClass('hidden'); $('.typLi').removeClass('active'); $(this).parent().addClass('active');">Einmalige</a>
+							</li>
+							<li class="typLi">
+								<a data-do="$('tr.module').addClass('hidden'); $('tr.module-type-4').removeClass('hidden'); $('.typLi').removeClass('active'); $(this).parent().addClass('active');">Forschungsseminar</a>
+							</li>
+						</ul>
+		              </li>
+		          </ul>
+		  		</div>
+			</div>
+			<!--  End Sidebar -->
+
+	<!-- Well fuer jeden Fb -->
+	<div class="container-fluid wellContainer">
+	
+			<div class="well col-md-10">			
+				{{#fachbereiche}}
+				<div class="fb-{{fbId}}">
+					<h1 class="fb-heading text-center">{{fbName}}</h1>
+					{{#institute}}<!-- Hole alle Institute aus DB -->
+						<!--  Hole fuer jedes Institut die aktuellen STO -->
+						<!-- gib alle Module der LVs, nach STA sortiert aus BSc->Master->Lehramt -->
+						{{#sta}}
+						<div class="panel panel-primary sta-{{staId}} stoPanel-{{iId}} stoPanel">
+							<div class="panel-heading" id="sto-title"><h2 class="panel-title text-center">{{staName}} {{iName}}</h2></div>
+							{{^semester}}
+								Keine Module
+							{{/semester}}
+							{{#semester}}
+							<table class="table table-hover table-responsive semester-{{sId}} semester asc">
+								<thead>
+									<tr>
+										<th>Lv-Nr</th>
+										<th>
+											Lv-Typ
+											<a class="linkIcons pull-right sortTyp">
+										 		<span class="glyphicon glyphicon-sort"></span>
+										 	</a>
+										</th>
+										<th>
+											LV-Name
+											<a class="linkIcons pull-right sortName">
+										 		<span class="glyphicon glyphicon-sort"></span>
+										 	</a>
+										</th>
+										<th>Zeit und Ort</th>
+										<th>
+											Dozent
+											<a class="linkIcons pull-right sortLec">
+										 		<span class="glyphicon glyphicon-sort"></span>
+										 	</a>
+										</th>
+										<th>SWS</th>
+										<th>
+											Art
+											<a class="linkIcons pull-right sortArt">
+										 		<span class="glyphicon glyphicon-sort"></span>
+										 	</a>
+										</th>
+									</tr>
+								</thead>
+								<tbody>
+									{{#module}}
+										<tr class="module-{{mId}} module module-type-{{mTyp}}" data-mname="{{mName}}" data-mtyp={{mTyp}} data-mlvt={{mLvArt}}>
+											<th colspan="2">Modul: {{mName}}</th>
+											<th>({{mNummer}})</th>
+											<th colspan=""></th>
+											
+										</tr>
+										{{#lvs}}
+										<tr class="module-{{mId}} module module-type-{{mTyp}}" data-mname="{{mName}}" data-mtyp={{mTyp}} data-mlvt={{mLvArt}} data-mlec="{{mLec}}">
+											<td><small>{{mLvNummer}}</small></td>
+											<td><small>{{mLvArt}}</small></td>
+											<td>
+												<a {{#loginname}}data-go="//editModule/{{mId}}/{{sId}}/:editModule"{{/loginname}}>{{mName}}</a>											
+											</td>
+											<td>
+												{{^termine}}{{/termine}}
+												{{#termine}}
+													{{^pTermin}}<small class="termin-{{tId}}-{{pId}} td-fullwidth text-left">Wird bekannt gegeben</small>{{/pTermin}}
+													{{#pTermin}}
+														<small class="termin-{{tId}}-{{pId}} td-fullwidth text-left">{{tTag}} {{tVon}}-{{tBis}} Uhr / {{gKuerzel}} {{rKuerzel}}<br></small>
+													{{/pTermin}}
+												{{/termine}}
+											</td>
+											<td>
+												{{^termine}}{{/termine}}
+												{{#termine}}
+													{{#semesterLecturer}}
+														<small class="lecturer-{{lId}}-{{pId}} td-fullwidth text-left lecturer" data-lname="{{lVorname}} {{lNachname}}">{{lVorname}} {{lNachname}}<br></small>
+													{{/semesterLecturer}}
+												{{/termine}}
+											</td>
+											<td><small>{{mLvSws}}</small></td>
+											<td><small>{{mTypName}}</small></td>
+										</tr>
+										{{/lvs}}
+									{{/module}}
+								</tbody>
+							</table>
+							{{/semester}}
+						</div>
+						{{/sta}}
+					{{/institute}}
+				</div>
+				{{/fachbereiche}}
+			</div>
+		</div>
+</div>
+
+
+
+
+
+
+
+
+	<!-- Start: New Lecturer Modal -->
+	<div class="modal fade mod-lecturer-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" id="lecturer-modal">
+		<div class="modal-dialog modal-md">
+			<div class="modal-content">
+				<div class="modal-header text-center">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h2 class="modal-title">Neuen Dozenten/Tutor hinzuf&uuml;gen</h2>
+				</div>
+				<div class="modal-body">
+					<div class="alert text-center hidden" id="validateLecturer"></div>
+					<form class="form-horizontal" role="form">
+						<div class="form-group has-feedback">
+							<label for="lTypSelect" class="col-sm-3 control-label">Typ</label>
+							<div class="col-sm-9">
+								<select id="lTypSelect" class="form-control">
+									<option class="dropdown-option lTypOption" value="1">Dozent</option>
+									<option class="dropdown-option lTypOption" value="2">Tutor</option>
+									<option class="dropdown-option lTypOption" value="3">Verwaltung</option>
+									<option class="dropdown-option lTypOption" value="4">Sekretariat</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group has-feedback">
+							<label for="lVorname" class="col-sm-3 control-label">Vorname *</label>
+							<div class="col-sm-9">
+								<input type="text" id="lVorname" class="form-control" placeholder="Vorname" required="required">
+							</div>
+						</div>
+						<div class="form-group has-feedback">
+							<label for="lNachname" class="col-sm-3 control-label">Nachname *</label>
+							<div class="col-sm-9">
+								<input type="text" id="lNachname" class="form-control" placeholder="Nachname" required="required">
+							</div>							
+						</div>
+
+						<div class="form-group has-feedback">
+							<label for="lZedat" class="col-sm-3 control-label">Zedat Account:</label>
+							<div class="col-sm-9">
+								<input type="text" id="lZedat" class="form-control" placeholder="Zedat-Account">
+							</div>
+						</div>
+						<div class="form-group has-feedback">
+							<label for="lEmail" class="col-sm-3 control-label">Email:</label>
+							<div class="col-sm-9">
+								<input type="email" id="lEmail" class="form-control" placeholder="Email">
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Schliessen</button>
+					<button type="button" class="btn btn-primary" id="addLecturer">Hinzuf&uuml;gen</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End New Lecturer Modal -->
+
+
+
+
+
+
+
+
+
+
+</div>

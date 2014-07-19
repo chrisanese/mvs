@@ -1,0 +1,130 @@
+#kvv, #eventokvv {
+    
+    table {
+        width: 950px;
+        border-collapse: separate;
+        border-spacing: 2px;
+    }
+    
+    .lvNr {
+        width: 150px;
+    }
+    
+    .lvTyp {
+        width: 30px;
+    }
+    
+    .lecturers {
+        width: 120px;
+    }
+    
+    th {
+        font-size: 9px;
+        background-color: @fu-grau5;
+        font-weight: bold;
+        border-spacing: 0;
+        text-align: left;
+    }
+    
+    tr:nth-child(even) td {
+        background-color: @fu-grau6;
+    }
+    
+    tr:nth-child(odd) td {
+        background-color: white;
+    }
+    
+    tr:hover td {
+        background-color: @fu-gruen;
+    }
+    
+    tr:hover td a {
+        color: black;
+    }
+    
+    td {
+        font-family: Verdana, Arial, Helvica, sans-serif;
+        font-size: 11px;
+        line-height: 13px;
+        padding: 2px;
+        margin: 0;
+    }
+    
+    .title {
+        padding: 0;
+    }
+    
+    .title a {
+        display: block;
+        padding: 2px;
+    }
+    
+    h2 {
+        margin: 12px 0px 4px 0px;
+        color: #333333;
+        font-family: Verdana, Arial, Helvica, sans-serif;
+        font-size: 11px;
+        font-weight: bold;
+    }
+  
+    .hidden {
+        display: none;
+    }
+
+    .selected {
+        font-weight: bold;
+    }
+}
+
+#kvv-site, #eventokvv-site {
+
+    font-family: Verdana, Arial, Helvica, sans-serif;
+    font-size: 11px;
+    
+    table {
+        width: 850px;
+        border-collapse: separate;
+        border-spacing: 2px;
+    }
+    
+    th {
+        font-size: 9px;
+        background-color: @fu-grau5;
+        font-weight: bold;
+        border-spacing: 0;
+        text-align: left;
+    }
+    
+    h2 {
+        margin-bottom: 0;
+    }
+    
+    h2 + p {
+        margin-top: 1em;
+        margin-bottom: 1.5em;
+    }
+    
+    td {
+        vertical-align: top;
+    }
+    
+    td:first-child {
+        width: 120px;
+    }
+    
+    td {
+        padding: 2px;
+    }
+    
+    td.pseudo {
+        text-align: center;
+    }
+    
+    td.nebentermine, td.haupttermine {
+        background-color: @fu-grau6;
+    }
+    
+    div.termin:hover {
+        background-color: @fu-grau5;
+    }
+}

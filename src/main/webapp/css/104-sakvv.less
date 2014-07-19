@@ -1,0 +1,110 @@
+.sakvv {
+
+    table {
+        border-collapse: collapse;
+    }
+    
+    div.site {
+        border: 2px solid @fu-blau;
+        border-radius: 5px;
+        position: relative;
+        width: 800px;
+        margin-bottom: 10px;
+    }
+    
+    table.site {
+        width: 100%;
+        border: 0 solid white !important;
+    }
+
+    td {
+        border: 1px solid @fu-blau;
+        padding: 0;
+        margin: 0;
+        height: 30px;
+    }
+    
+    td.lecturers {
+        width: 300px;
+    }
+    
+    td.zyklus, td.zeit, td.ort {
+        width: 120px;
+    }
+    
+    td.lecturers > table {
+        width: 100%;
+    }
+    
+    td.lecturers td {
+        border: none;
+    }
+    
+    td.mail, td.web {
+        width: 50px;
+    }
+    
+    td.lecturers tr + tr td {
+        border-top: 1px solid @fu-blau;
+    }
+    
+    td.typ, td.ects {
+        text-align: center;
+    }
+
+    span.zyklus, span.zeit, span.ort {
+        display: block;
+        text-align: center;
+        font-size: 10px;
+        line-height: 10px;
+    }
+    
+    span.zyklus + span.zyklus {
+        display: none;
+    }
+    
+    tr.description {
+        div.text {
+            margin:10px;
+        }
+    }
+    
+    td.expander {
+        width: 80px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 30px;
+        line-height: 30px;
+        vertical-align: baseline;
+        
+        a {
+            display: block;
+        }
+    }
+    
+    tr.hidden {
+        display: none;
+    }
+    
+    .expanded tr.hidden {
+        display: table-row;
+    }
+    
+    a.expander:before {
+        content: "+";
+    }
+    
+    .expanded a.expander:before {
+        content: "–";
+    }
+    
+    span.text, div.text {
+        display: block;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    
+    tr.metaInfo span.text {
+        text-align: center;
+    }
+}

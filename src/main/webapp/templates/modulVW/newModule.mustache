@@ -1,0 +1,607 @@
+<div class="newModule">
+	<script>
+
+		$(function(){
+			$('#ectsForm').spinner({
+				min: 0,
+				max: 30,
+				step: 1
+			});
+			
+			$('#lvSws').spinner({
+				min: 1,
+				step: 1
+			});
+			
+			function validate(){
+				// Alle Felder holen
+				var modulName = $('#moduleName'),
+				iId = $('#faculties option:selected').val();
+				stoId = $('#sto option:Selected').val(),
+				mkId = $('#categories option:selected').val(),
+				mkKuerzel = $('#categories option:selected').attr('data-kuerzel'),
+				mFrequenz = $('#frequency option:selected').val(),
+				mEcts= $('#ectsForm').val(),
+				spId= $('#language option:selected').val(),
+				mInhalt= $('#moduleContent').val(),
+				mZiele= $('#moduleObjectives').val(),
+				mLiteratur= $('#moduleLiterature').val(),
+				mVoraussetzungen= $('#modulVoraussetzungen').val(),
+				mTyp = $('#veranstaltungsform option:selected').val(),
+				lvTypen = [],
+				lvSws=[],
+				lvAPflicht=[],
+				verantwortliche=[];
+				
+				$('#lvListe tr.lvs').each(function(){
+					var lvtId = $( this ).attr('data-lvtId');
+					var lvtSws = $( this ).attr('data-lvSws');
+					var lvtAPflicht = $( this ).attr('data-lvAPflicht');
+					lvTypen.push(lvtId);
+					lvSws.push(lvtSws);
+					lvAPflicht.push(lvtAPflicht);
+				});
+				var lvs = [lvTypen,lvSws,lvAPflicht];
+				
+				$('#verantwortlichenListe tr.verantwortliche').each(function(){
+					var mvId = $( this ).attr('data-lId');
+					verantwortliche.push(mvId);
+				});
+				
+				if(modulName.val().length == 0){
+					modulName.val('Modul muss einen Namen haben').addClass('has-success');
+					modulName.focus();					
+					setTimeout(function(){
+						modulName.removeClass('has-success',1500).val("");
+					},1500);					
+					return false;
+				}
+				
+				var insert = {
+						"iId": iId,
+						"mName": modulName.val(),
+						"mkId": mkId,
+						"mkKuerzel": mkKuerzel,
+						"mFrequenz": mFrequenz,
+						"stoId": stoId,
+						"mEcts": mEcts,
+						"spId": spId,
+						"mInhalt" : mInhalt,
+						"mZiele": mZiele,
+						"mLiteratur": mLiteratur,
+						"mVoraussetzungen": mVoraussetzungen,
+						"mTyp": mTyp,
+						"mVerantwortliche": JSON.stringify(verantwortliche),
+						"mLvs" : JSON.stringify(lvs)
+				};
+				$.ajax({
+					url: Scuttle.path('/backend/modulVW/insertModule'),
+					type: "POST",
+					data: insert
+				}).done(function(data){
+					setTimeout(function(){
+						var url = Scuttle.path("/modulVW/moduleList:alleModule");
+						$(location).attr('href',url);
+					},2500);
+				}).fail(function(req,text,error){
+					alert("ERROR");
+				});
+					
+				return true;
+			}
+			
+			$('#addVerantwortlicher').click(function(){
+				var lId = $('#responsibles option:selected').val();
+				var lVorname = $('#responsibles option:selected').attr('data-vorname');
+				var lNachname = $('#responsibles option:selected').attr('data-nachname');
+				
+				// Add new Row to "Verantwortlichen Liste" 
+				$('#verantwortlichenListe > table > tbody').append('<tr data-lId="'+lId+'" class="verantwortliche"><td>'+lVorname+'</td><td>'+lNachname+'</td>'+
+						'<td><button class="btn btn-danger btn-circle btn-xs" id="verantwortlicher-'+lId+'"><span class="glyphicon glyphicon-minus"></span></button></td></tr>');
+				$('#verantwortlicher-'+lId).click(function(){
+					//alert('delete')
+					$(this).parent().parent('tr').remove();
+				});
+				
+				$('#verantworltiche-modal').modal('hide');
+				
+			});
+			
+			$('#addLv').click(function(){
+				var lvtId = $('#course option:selected').val();
+				var lvtName = $('#course option:selected').attr('data-lvtName');
+				var lvSws = $('#lvSws').val();
+				var lvAnwesenheit = $('#coursePresence').prop('checked') == true ? 'Anwesenheitspflich' : 'keine Anwesenheitspflicht';
+				var lvAPflicht = $('#coursePresence').prop('checked');
+				
+				// Add new Row to "Lv Liste" 
+				$('#lvListe > table > tbody').append(
+						'<tr data-lvtId="'+lvtId+'" data-lvSws="'+lvSws+'" data-lvAPflicht="'+lvAPflicht+'" class="lvs">'+
+						'<td>'+lvtName+'</td><td>'+lvSws+'</td><td>'+lvAnwesenheit+'</td>'+
+						'<td><button class="btn btn-danger btn-circle btn-xs" id="lv-'+lvtId+'"><span class="glyphicon glyphicon-minus"></span></button></td></tr>');
+				$('#lv-'+lvtId).click(function(){
+					alert('delete')
+					$(this).parent().parent('tr').remove();
+				});
+				
+				$('#lv-modal').modal('hide');
+			});
+			
+			$('#addModule').click(function(){
+				if(validate()){
+					
+					//alert('done');
+				}
+			});
+			
+			$('#faculties, #sta').change(function(){
+				var iId = $('#faculties option:selected').val();
+				var staId = $('#sta option:selected').val();
+				$('.sto').addClass('hidden');
+				$('.sto-'+iId+'-'+staId+' , .sto-'+iId+'-'+staId+"-aktuell").removeClass('hidden');
+				$('#sto').val($('.sto-'+iId+'-'+staId+'-aktuell').val());
+				
+				//
+				$('.categoryOption').addClass('hidden');
+				$('.kat-'+iId).removeClass('hidden');
+				$('#categories').val($('.kat-'+iId).first().val());
+				
+				
+			});
+			
+			/*
+			* Sortierfunktion fuer select
+			*/
+			function NASort2(a, b) {    
+			    if (a.innerHTML == 'NA') {
+			        return 1;   
+			    }
+			    else if (b.innerHTML == 'NA') {
+			        return -1;   
+			    }       
+			    return (a.innerHTML > b.innerHTML) ? 1 : -1;
+			};
+			
+			$('#responsibles option').sort(NASort2).appendTo('#responsibles');
+			$('#responsibles option:first-child').attr("selected",true);
+			
+			
+			/*===========================================================================*
+			* Modal um Dozenten hinzuzufuegen
+			*============================================================================*/
+			$('#lVorname, #lNachnam').keydown(function(){
+				if($(this).val().length > 0){
+					
+				}
+					
+			});
+			
+		});
+		
+		/*================================================*
+		* Add new LEcturer to DB
+		*=================================================*/
+		$('#addLecturer').click(function(){
+			var lVname = $('#lVorname').val();
+			var lNname = $('#lNachname').val();
+			var lTypId = $('#lTypSelect option:selected').val();
+			var lZedat = $('#lZedat').val();
+			var lEmail = $('#lEmail').val();
+			var lTyp = $('#lTypSelect option:selected').text();
+			
+			if(lVname.length == 0){
+				$('#lVorname').parent().addClass('has-error');
+				$('#lVorname').parent().append('<span id="controlvname" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+			}
+			if(lNname.length == 0){
+				$('#lNachname').parent().addClass('has-error');
+				$('#lNachname').parent().append('<span id="controlnname" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+			}
+			if(lVname.length > 0 && lNname.length > 0){
+				var lec = {
+					"typ": lTypId,
+					"vorname": lVname,
+					"nachname": lNname,
+					"zedat": lZedat,
+					"email": lEmail				
+				};
+					
+				$.ajax({
+					url: Scuttle.path('/backend/modulVW/saveLecturer'),
+					type: "POST",
+					data: lec
+				}).done(function(data){
+					if(!data.lExists){
+						// Erfolgreich hinzugefuegt				
+						$('#validateLecturer').removeClass('hidden').text(lTyp + ' wurde erfoglreich hinzugefuegt.').addClass('alert-success');
+						setTimeout(function(){
+							$('#validateLecturer').addClass('hidden').removeClass('alert-success',1500).text("");
+							$('#lecturer-modal').modal('hide');
+						},1500);
+		
+						$('#lVorname').val("");
+						$('#lNachname').val("");
+						$('#lZedat').val("");
+						$('#lEmail').val("");
+						
+						$('.has-error').removeClass('has-error');
+						$('.has-success').removeClass('has-success');
+						$('#controlvname, #controlnname').remove();
+						
+					}else{
+						// Zedat-Account existiert bereits
+						$('#validateLecturer').removeClass('hidden').addClass('alert-danger').text("Es exitiert bereits jemand mit dem Zedat-Account "+lZedat+".");
+						setTimeout(function(){
+							$('#validateLecturer').addClass('hidden').removeClass('alert-danger',1500).text("");
+						},1500);
+						$('#lZedat').focus();
+					}
+				}).fail(function(req,text,error){
+					alert("Ein unerwarteter Fehler ist aufgetreten.");
+				});
+			}
+			
+		});
+
+		
+		$('#lVorname, #lNachname').keydown(function(){
+			$(this).parent().removeClass('has-error');
+			$(this).parent().children('span').remove();
+			if($(this).val().length > 0){
+				$(this).parent().parent().addClass('has-success');
+				$(this).parent().append('<span id="controlvname" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+			}else{
+				$(this).parent().parent().removeClass('has-success');
+			}
+		});
+	</script>
+	
+	<!-- Start: Login Modal -->
+	<div class="modal fade mod-login-modal" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true" id="login-modal">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header text-center">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h2 class="modal-title">Login</h2>
+				</div>
+				<div class="modal-body">
+				<input type="text" id="loginUname" class="form-control" placeholder="Benutzername" required="required">
+				<input type="password" id="loginPw" class="form-control" placeholder="Passwort" required="required">
+				</div>
+				<div class="modal-footer">
+					<div class="text-center">						
+						<a id="logLink" class="btn btn-success signin">Login</a>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Schliessen</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Login Modal -->
+	
+	<p id="mvsMenu">
+		{{^loginname}}
+		<a class="btn btn-link" data-toggle="modal" data-target=".mod-login-modal">
+				Login
+		</a>
+		{{/loginname}}
+		{{#loginname}}
+		Hallo {{loginname}} <a data-go="//logout:alleModule">Logout</a>
+		<br>
+		<a href="/mvs/backend/modulVW/export/sem/3" target="_blank">SS14 Export</a>  |  
+		<a href="/mvs/backend/modulVW/export/sem/4" target="_blank">WS14/15 Export</a>
+		{{/loginname}}
+	</p>
+		<!-- start: navbar -->
+	<nav class="navbar navbar-default" role="navigation" id="topNavigation">
+		<div class="container-fluid">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example">
+					<span class="sr-only">Toggle Navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>				
+				</button>
+				<a class="navbar-brand" data-go="//moduleList:alleModule">MVS</a>
+			</div>
+
+			<!-- start: Nav -->
+			<div class="collapse navbar-collapse" id="bs-example">
+				<ul class="nav navbar-nav">
+					<li><a data-go="//moduleList:alleModule">Alle Veranstaltungen</a></li>
+					<li><a {{#loginname}}data-go="//meineModule:meineModule"{{/loginname}}>Meine  Veranstaltungen</a></li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Langfristplanung <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a {{#loginname}}data-go="//langfristPlanung/7/3/:langfristplanung"{{/loginname}}>Informatik</a></li>	
+							<li class="divider"></li>
+							<li><a {{#loginname}}data-go="//langfristPlanung/8/3/:langfristplanung"{{/loginname}}>Mathematik</a></li>
+							<li class="divider"></li>
+							<li><a {{#loginname}}data-go="//langfristPlanung/10/3/:langfristplanung"{{/loginname}}>Physik</a></li>
+							<li class="divider"></li>
+							<li><a {{#loginname}}data-go="//langfristPlanung/11/3/:langfristplanung"{{/loginname}}>Bioinformatik</a></li>				
+						</ul>
+					</li>
+					<li class="dropdown active">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Modulverwaltung <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+								<li><a {{#loginname}}data-go="//newModule:newModule"{{/loginname}}>Neues Modul</a></li>
+								<!--<li><a {{#loginname}}data-go="//newModule:newModule"{{/loginname}}>Modul Bearbeiten</a></li>
+								<li><a {{#loginname}}data-go="//newModule:newModule"{{/loginname}}>Neues Veranstaltung</a></li>-->
+								<li><a {{#loginname}}data-toggle="modal" data-target=".mod-lecturer-modal"{{/loginname}}>Neuer Dozent</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Einstellungen<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a {{#loginname}}data-toggle="modal" data-target=".mod-sto-modal"{{/loginname}}>Neue Studienordnung anlegen</a></li>
+							<li><a href="#">DB-Daten</a></li>
+						</ul>
+					</li>
+				</ul>
+			</div>
+			<!-- end: nav -->
+		</div>
+	</nav>
+	<!--  End: Navvbar -->
+	
+	{{^loginname}}
+		<div class="alert alert-danger">
+			Sie m&uuml;ssen eingeloggt sein um ein neues Modul zu erstellen
+		</div>
+	{{/loginname}}
+	{{#loginname}}
+		<p class="validateChanges"></p>
+		<fieldset class="moduleInfo">
+			<legend>Neues Modul anlegen</legend>
+			
+			<p class="formLabel">Modulname</p>
+			<input class="moduleFormTitle" name="title" type="text" id="moduleName">
+			<br />
+			
+			<!-- Angabe ob es sich um einm einmmaliges, regelmaessiges oder verpflichtendes Modul handelt -->
+			<p class="formLabel">Art des Moduls</p>
+			<select id="veranstaltungsform" class="dropdownForm">
+				<option class="dropdown-option" value="1" title="Fachbereich">Pflicht</option>
+				<option class="dropdown-option" value="2" title="Fachbereich">Regelm&auml;&szlig;g</option>
+				<option class="dropdown-option" value="3" title="Fachbereich">Einmalig</option>
+				<option class="dropdown-option" value="4" title="Fachbereich">Forschungsseminar</option>
+			</select>
+			
+			<br />
+			
+			<p class="formLabel">Fachbereich und Kategorie</p>
+			
+			<select id="faculties" class="dropdownForm">
+			{{#fachbereiche}}
+				<optgroup label="{{fbName}}">
+				{{#institute}}
+					<option class="dropdown-option" value="{{iId}}" title="Fachbereich">{{iName}}</option>
+				{{/institute}}
+				</optgroup>
+			{{/fachbereiche}}
+			</select>
+			
+			<!-- Studienart waehlen BSc, Master, L-Amt -->
+			<select id="sta" class="dropdownForm">
+			{{#sta}}
+				<option class="dropdown-option" value="{{staId}}" title="Studienart">{{staName}}</option>
+			{{/sta}}
+			</select>
+			
+			<!-- Sto waehlen, es werden nur zum gewaehlten Institut und Sta entsprechende stos angezeigt -->
+			<select id="sto" class="dropdownForm">
+			{{#sto}}
+				<option class="dropdown-option sto sto-{{iId}}-{{staId}}{{#stoAktuell}}-aktuell{{/stoAktuell}}" value="{{stoId}}" title="Studienordnung">{{stoName}}</option>
+			{{/sto}}
+			</select>
+			
+			<select id="categories" class="dropdownForm">
+			{{#mkategorien}}
+				<option class="dropdown-option categoryOption kat-{{iId}}" value="{{mkId}}" title="Kategorie" data-kuerzel="{{mkKuerzel}}">{{mkName}}</option>
+			{{/mkategorien}}
+			</select>
+			
+			<p class="formLabel">Frequenz
+				<span class="ectsLabel">Ects</span>
+				<span class="languageLabel">Sprache</span>
+			</p>
+						
+			<select id="frequency" class="dropdownForm formSpinner">
+				<option value="1">WS</option>
+				<option value="2">SS</option>
+				<option value="3">nach WS</option>
+				<option value="4">nach SS</option>
+				<option value="5">WS und SS</option>
+			</select>
+			
+			<input id="ectsForm" name="ectsForm" value="0">
+			
+			<select id="language" class="dropdownForm formSpinner">
+			{{#sprachen}}
+				<option value="{{spId}}">{{spName}}</option>
+			{{/sprachen}}
+			</select>			
+						
+			<p class="formLabel">Inhalt</p>
+			<textarea id="moduleContent" class="moduleFormTextArea"></textarea>
+			
+			<p class="formLabel">Ziele</p>
+			<textarea id="moduleObjectives" class="moduleFormTextArea"></textarea>
+			
+			<p class="formLabel">Literatur</p>
+			<textarea id="moduleLiterature" class="moduleFormTextArea"></textarea>
+			
+			<p class="formLabel">Weitere Informationen:</p>
+			<textarea id="modulVoraussetzungen" class="moduleFormTextArea"></textarea>
+			
+			<!-- START TERMIN -->
+			<!-- Liste der Termine -->
+			<div class="panel panel-primary" id="lvListe">
+				<div class="panel-heading">
+					<h1 class="panel-title">Veranstaltungstermine</h1>
+				</div>
+				<table class="table table-striped table-condensed">
+					<thead>
+						<tr>
+							<th>Vernastaltungsart</th>
+							<th>Sws</th>
+							<th>Anwesenheit</th>
+							<th>
+								<!-- Modal um Verantwortliche dem Modul hinzuzufuegen -->
+								<button class="btn btn-success btn-circle btn-xs" data-toggle="modal" data-target=".mod-lv-modal">
+									<span class="glyphicon glyphicon-plus"></span>
+								</button>
+							</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
+			
+			<div class="modal fade mod-lv-modal" tabindex="-1" role="dialog" aria-labelledby="Veranstaltung hinzuf&uuml;gen" aria-hidden="true" id="lv-modal">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			    	<div class="modal-header">
+			    		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			    		<h2 class="modal-title">Veranstaltung hinzuf&uuml;gen</h2>
+			    	</div>
+			    	<div class="modal-body">
+			    		<p class="formLabel control-label">Veranstaltungsart</p>
+	    				<select id="course" class="dropdownForm">
+	    				{{#lvTypen}}
+							<option class="dropdown-option courseType" value="{{lvtId}}" title="Kursart" data-lvtName="{{lvtName}}">{{lvtName}}</option>
+						{{/lvTypen}}
+						</select>
+						<p class="formLabel control-label">SWS</p>
+						<input id="lvSws" name="courseSws" value="1">
+						<p class="formLabel control-label">Anwesenheitspflich
+						<input id="coursePresence" name="coursePresence" type="checkbox"></p>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Schliessen</button>
+						<button type="button" class="btn btn-primary" id="addLv">Hinzuf&uuml;gen</button>
+					</div>
+			    </div>
+			  </div>
+			</div>
+			<!-- END TERMIN -->
+						<!-- Liste der gewaehlten Verantwortlichen -->
+			<div class="panel panel-primary" id="verantwortlichenListe">
+				<div class="panel-heading">
+					<h1 class="panel-title">Modul Verantworltiche</h1>
+				</div>
+				<table class="table table-striped">
+					<thead>
+						<tr>
+							<th>Vorname</th>
+							<th>Nachname</th>
+							<th>
+								<!-- Modal um Verantwortliche dem Modul hinzuzufuegen -->
+								<button class="btn btn-success btn-circle btn-xs" data-toggle="modal" data-target=".mod-verantwortliche-modal">
+									<span class="glyphicon glyphicon-plus"></span>
+								</button>
+							</th>
+						</tr>
+					</thead>
+					<tbody></tbody>
+				</table>
+			</div>
+			
+			<div class="modal fade mod-verantwortliche-modal" tabindex="-1" role="dialog" aria-labelledby="Verantwortlichen hinzuf&uuml;gen" aria-hidden="true" id="verantworltiche-modal">
+			  <div class="modal-dialog">
+			    <div class="modal-content">
+			    	<div class="modal-header">
+			    		<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+			    		<h2 class="modal-title">Verantwortlichen hinzuf&uuml;gen</h2>
+			    	</div>
+			    	<div class="modal-body">
+				    	<form class="form-horizontal">
+					    	<div class="form-group has-feedback">
+						    	<div class="col-sm-3">	
+									
+								</div>
+								<div class="col-sm-7">
+									<select id="responsibles" class="dropdownForm">
+									{{#lehrende}}
+										<option class="dropdown-option responsibles" value="{{lId}}" data-ltId="{{ltId}}" data-vorname="{{lVorname}}" data-nachname="{{lNachname}}">{{lNachname}} {{lVorname}}</option>
+									{{/lehrende}}
+									</select>
+								</div>
+							</div>
+						</form>
+					</div>
+					<div class="modal-footer">
+						<button type="button" class="btn btn-default" data-dismiss="modal">Schliessen</button>
+						<button type="button" class="btn btn-primary" id="addVerantwortlicher">Hinzuf&uuml;gen</button>
+					</div>
+			    </div>
+			  </div>
+			</div>
+			
+			
+			<button id="addModule">Modul erstellen</button>
+			
+			
+		</fieldset>
+	{{/loginname}}
+		
+		<!-- Start: New Lecturer Modal -->
+	<div class="modal fade mod-lecturer-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" id="lecturer-modal">
+		<div class="modal-dialog modal-md">
+			<div class="modal-content">
+				<div class="modal-header text-center">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h2 class="modal-title">Neuen Dozenten/Tutor hinzuf&uuml;gen</h2>
+				</div>
+				<div class="modal-body">
+					<div class="alert text-center hidden" id="validateLecturer"></div>
+					<form class="form-horizontal" role="form">
+						<div class="form-group has-feedback">
+							<label for="lTypSelect" class="col-sm-3 control-label">Typ</label>
+							<div class="col-sm-9">
+								<select id="lTypSelect" class="form-control">
+									<option class="dropdown-option lTypOption" value="1">Dozent</option>
+									<option class="dropdown-option lTypOption" value="2">Tutor</option>
+									<option class="dropdown-option lTypOption" value="3">Verwaltung</option>
+									<option class="dropdown-option lTypOption" value="4">Sekretariat</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group has-feedback">
+							<label for="lVorname" class="col-sm-3 control-label">Vorname *</label>
+							<div class="col-sm-9">
+								<input type="text" id="lVorname" class="form-control" placeholder="Vorname" required="required">
+							</div>
+						</div>
+						<div class="form-group has-feedback">
+							<label for="lNachname" class="col-sm-3 control-label">Nachname *</label>
+							<div class="col-sm-9">
+								<input type="text" id="lNachname" class="form-control" placeholder="Nachname" required="required">
+							</div>							
+						</div>
+
+						<div class="form-group has-feedback">
+							<label for="lZedat" class="col-sm-3 control-label">Zedat Account:</label>
+							<div class="col-sm-9">
+								<input type="text" id="lZedat" class="form-control" placeholder="Zedat-Account">
+							</div>
+						</div>
+						<div class="form-group has-feedback">
+							<label for="lEmail" class="col-sm-3 control-label">Email:</label>
+							<div class="col-sm-9">
+								<input type="email" id="lEmail" class="form-control" placeholder="Email">
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Schliessen</button>
+					<button type="button" class="btn btn-primary" id="addLecturer">Hinzuf&uuml;gen</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End New Lecturer Modal -->
+	{{>newSTOTemplate}}
+</div>

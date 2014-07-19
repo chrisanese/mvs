@@ -1,0 +1,134 @@
+<script>
+		/*================================================*
+		* Add new LEcturer to DB
+		*=================================================*/
+		$('#addLecturer').click(function(){
+			var lVname = $('#lVorname').val();
+			var lNname = $('#lNachname').val();
+			var lTypId = $('#lTypSelect option:selected').val();
+			var lZedat = $('#lZedat').val();
+			var lEmail = $('#lEmail').val();
+			var lTyp = $('#lTypSelect option:selected').text();
+			
+			if(lVname.length == 0){
+				$('#lVorname').parent().addClass('has-error');
+				$('#lVorname').parent().append('<span id="controlvname" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+			}
+			if(lNname.length == 0){
+				$('#lNachname').parent().addClass('has-error');
+				$('#lNachname').parent().append('<span id="controlnname" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+			}
+			if(lVname.length > 0 && lNname.length > 0){
+				var lec = {
+					"typ": lTypId,
+					"vorname": lVname,
+					"nachname": lNname,
+					"zedat": lZedat,
+					"email": lEmail				
+				};
+					
+				$.ajax({
+					url: Scuttle.path('/backend/modulVW/saveLecturer'),
+					type: "POST",
+					data: lec
+				}).done(function(data){
+					if(!data.lExists){
+						// Erfolgreich hinzugefuegt				
+						$('#validateLecturer').removeClass('hidden').text(lTyp + ' wurde erfoglreich hinzugefuegt.').addClass('alert-success');
+						setTimeout(function(){
+							$('#validateLecturer').addClass('hidden').removeClass('alert-success',1500).text("");
+							$('#lecturer-modal').modal('hide');
+						},1500);
+		
+						$('#lVorname').val("");
+						$('#lNachname').val("");
+						$('#lZedat').val("");
+						$('#lEmail').val("");
+						
+						$('.has-error').removeClass('has-error');
+						$('.has-success').removeClass('has-success');
+						$('#controlvname, #controlnname').remove();
+					}else{
+						// Zedat-Account existiert bereits
+						$('#validateLecturer').removeClass('hidden').addClass('alert-danger').text("Es exitiert bereits jemand mit dem Zedat-Account "+lZedat+".");
+						setTimeout(function(){
+							$('#validateLecturer').addClass('hidden').removeClass('alert-danger',1500).text("");
+						},1500);
+						$('#lZedat').focus();
+					}
+				}).fail(function(req,text,error){
+					alert("Ein unerwarteter Fehler ist aufgetreten.");
+				});
+			}
+			
+		});
+
+		
+		$('#lVorname, #lNachname').keydown(function(){
+			$(this).parent().removeClass('has-error');
+			$(this).parent().children('span').remove();
+			if($(this).val().length > 0){
+				$(this).parent().parent().addClass('has-success');
+				$(this).parent().append('<span id="controlvname" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+			}else{
+				$(this).parent().parent().removeClass('has-success');
+			}
+		});
+</script>
+<!-- Start: New Lecturer Modal -->
+	<div class="modal fade mod-lecturer-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" id="lecturer-modal">
+		<div class="modal-dialog modal-md">
+			<div class="modal-content">
+				<div class="modal-header text-center">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h2 class="modal-title">Neuen Dozenten/Tutor hinzuf&uuml;gen</h2>
+				</div>
+				<div class="modal-body">
+					<div class="alert text-center hidden" id="validateLecturer"></div>
+					<form class="form-horizontal" role="form">
+						<div class="form-group has-feedback">
+							<label for="lTypSelect" class="col-sm-3 control-label">Typ</label>
+							<div class="col-sm-9">
+								<select id="lTypSelect" class="form-control">
+									<option class="dropdown-option lTypOption" value="1">Dozent</option>
+									<option class="dropdown-option lTypOption" value="2">Tutor</option>
+									<option class="dropdown-option lTypOption" value="3">Verwaltung</option>
+									<option class="dropdown-option lTypOption" value="4">Sekretariat</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group has-feedback">
+							<label for="lVorname" class="col-sm-3 control-label">Vorname *</label>
+							<div class="col-sm-9">
+								<input type="text" id="lVorname" class="form-control" placeholder="Vorname" required="required">
+							</div>
+						</div>
+						<div class="form-group has-feedback">
+							<label for="lNachname" class="col-sm-3 control-label">Nachname *</label>
+							<div class="col-sm-9">
+								<input type="text" id="lNachname" class="form-control" placeholder="Nachname" required="required">
+							</div>							
+						</div>
+
+						<div class="form-group has-feedback">
+							<label for="lZedat" class="col-sm-3 control-label">Zedat Account:</label>
+							<div class="col-sm-9">
+								<input type="text" id="lZedat" class="form-control" placeholder="Zedat-Account">
+							</div>
+						</div>
+						<div class="form-group has-feedback">
+							<label for="lEmail" class="col-sm-3 control-label">Email:</label>
+							<div class="col-sm-9">
+								<input type="email" id="lEmail" class="form-control" placeholder="Email">
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Schliessen</button>
+					<button type="button" class="btn btn-primary" id="addLecturer">Hinzuf&uuml;gen</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End New Lecturer Modal -->

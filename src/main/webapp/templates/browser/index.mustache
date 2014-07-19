@@ -1,0 +1,21 @@
+<h1>Sakai Browser</h1>
+
+<div data-ui="tabs">
+  <ul>
+    {{#kinds}}
+    <li><a href="#tabs-{{kind}}">{{kind}}</a></li>
+    {{/kinds}}
+  </ul>
+  {{#kinds}}
+  <div id="tabs-{{kind}}">
+    {{#sites}}
+    <h2>{{siteTitle}}</h2>
+    <p><a href="/portal/site/{{siteId}}">In Sakai aufrufen</a></p>
+    <div>
+      {{& siteDescription}}
+    </div>
+    {{/sites}}
+  </div>
+  {{/kinds}}
+</div>
+

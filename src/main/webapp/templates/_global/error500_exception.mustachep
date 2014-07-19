@@ -1,0 +1,14 @@
+<p>
+Type: {{type}}<br/>
+Message: {{message}}
+</p>
+
+{{#hasCause}}
+<p>caused by:</p>
+
+{{#causedBy}}
+
+{{> error500_exception}}
+
+{{/causedBy}}
+{{/hasCause}}

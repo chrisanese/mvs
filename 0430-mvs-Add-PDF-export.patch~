@@ -1,0 +1,246 @@
+From 9c71cc4872bee79709c5640b958c548dc9fd387e Mon Sep 17 00:00:00 2001
+From: Stephan Sundermann <stephansundermann@gmail.com>
+Date: Sat, 7 Jun 2014 14:39:25 +0200
+Subject: [PATCH 430/430] mvs: Add PDF export
+
+Call backend/modulVW/export/sem/{semID} to generate a PDF
+---
+ .../de/fu/mi/scuttle/modules/modulVW/ModulVW.java  |   4 +-
+ .../modules/modulVW/ParameterizedPDFResponse.java  |  38 ++++++
+ .../de/fu/mi/scuttle/modules/modulVW/modulVW.xsl   | 152 +++++++++++++++++++++
+ 3 files changed, 192 insertions(+), 2 deletions(-)
+ create mode 100644 src/main/java/de/fu/mi/scuttle/modules/modulVW/ParameterizedPDFResponse.java
+ create mode 100644 src/main/resources/de/fu/mi/scuttle/modules/modulVW/modulVW.xsl
+
+diff --git a/src/main/java/de/fu/mi/scuttle/modules/modulVW/ModulVW.java b/src/main/java/de/fu/mi/scuttle/modules/modulVW/ModulVW.java
+index 4388ada..9dc417e 100644
+--- a/src/main/java/de/fu/mi/scuttle/modules/modulVW/ModulVW.java
++++ b/src/main/java/de/fu/mi/scuttle/modules/modulVW/ModulVW.java
+@@ -5,7 +5,6 @@ import java.util.List;
+ import java.util.concurrent.TimeUnit;
+ 
+ import javax.persistence.Query;
+-
+ import org.json.JSONArray;
+ import org.json.JSONException;
+ 
+@@ -132,6 +131,8 @@ public class ModulVW extends AbstractScuttleModule<ScuttleBackendServlet> {
+ 				re.put("loginname", request.getSession().get("username"));
+ 			response = new JSONResponse(re);
+ 			break;
++        case "export":
++            return new ParameterizedPDFResponse(new JSONResponse(getModuleList()), ModulVW.class.getResourceAsStream("modulVW.xsl"), "sId", semId);
+ 		case "tableTest":
+ 			response = new JSONResponse(new JsonObject().put("data", getFreeRooms(3)));
+ 			break;
+@@ -1483,5 +1484,4 @@ public class ModulVW extends AbstractScuttleModule<ScuttleBackendServlet> {
+ 
+ 		return null;
+ 	}
+-
+ }
+diff --git a/src/main/java/de/fu/mi/scuttle/modules/modulVW/ParameterizedPDFResponse.java b/src/main/java/de/fu/mi/scuttle/modules/modulVW/ParameterizedPDFResponse.java
+new file mode 100644
+index 0000000..383c27a
+--- /dev/null
++++ b/src/main/java/de/fu/mi/scuttle/modules/modulVW/ParameterizedPDFResponse.java
+@@ -0,0 +1,38 @@
++package de.fu.mi.scuttle.modules.modulVW;
++
++import de.fu.mi.scuttle.lib.web.JSONResponse;
++import de.fu.mi.scuttle.lib.web.PDFResponse;
++import org.json.JSONException;
++
++import javax.xml.parsers.ParserConfigurationException;
++import javax.xml.transform.*;
++import java.io.InputStream;
++import java.lang.reflect.Field;
++
++class ParameterizedPDFResponse extends PDFResponse {
++
++    public ParameterizedPDFResponse(
++            final JSONResponse response,
++            final InputStream stylesheet,
++            final String parameter,
++            final String value)
++            throws TransformerConfigurationException,
++            ParserConfigurationException, JSONException {
++        super (response, stylesheet);
++
++        Field transformField = null;
++        try {
++            transformField = PDFResponse.class.getDeclaredField("transformer");
++        } catch (NoSuchFieldException e) {
++            e.printStackTrace();
++        }
++        transformField.setAccessible(true);
++        try {
++            Transformer transformer = (Transformer)transformField.get(this);
++            transformer.setParameter(parameter, value);
++        } catch (IllegalAccessException e) {
++            e.printStackTrace();
++        }
++    }
++
++}
+diff --git a/src/main/resources/de/fu/mi/scuttle/modules/modulVW/modulVW.xsl b/src/main/resources/de/fu/mi/scuttle/modules/modulVW/modulVW.xsl
+new file mode 100644
+index 0000000..a481796
+--- /dev/null
++++ b/src/main/resources/de/fu/mi/scuttle/modules/modulVW/modulVW.xsl
+@@ -0,0 +1,152 @@
++<xsl:transform version="1.0" xmlns:xsl="http://www.w3.org/1999/XSL/Transform"
++    xmlns:fo="http://www.w3.org/1999/XSL/Format">
++
++    <xsl:param name="sId" />
++    <xsl:template match="/object">
++
++        <fo:root font-size="8pt">
++            <fo:layout-master-set>
++                <fo:simple-page-master master-name="A4-landscape" page-height="210mm"
++                    page-width="297mm" margin-top="1cm" margin-bottom="0.5cm" margin-left="0.5cm"
++                    margin-right="0">
++                    <fo:region-body margin-top="5mm"/>
++                    <fo:region-before/>
++                    <fo:region-after/>
++                    <fo:region-start/>
++                    <fo:region-end/>
++                </fo:simple-page-master>
++            </fo:layout-master-set>
++
++            <fo:page-sequence master-reference="A4-landscape">
++                <fo:static-content flow-name="xsl-region-after">
++                    <fo:block>
++                        <fo:page-number/>
++                    </fo:block>
++                </fo:static-content>
++                <fo:flow flow-name="xsl-region-body">
++                    <xsl:apply-templates select="array[@key='fachbereiche']" mode="fachbereiche"/>
++                </fo:flow>
++
++            </fo:page-sequence>
++        </fo:root>
++    </xsl:template>
++
++    <xsl:template match="object" mode="fachbereiche">
++        <fo:block>
++            <xsl:value-of select="string[@key='fbName']"/>
++        </fo:block>
++        <fo:table table-layout="fixed" width="100%" border="1pt solid black">
++            <fo:table-column column-width="6%" border="1pt solid black"/>
++            <fo:table-column column-width="10%" border="1pt solid black"/>
++            <fo:table-column column-width="25%" border="1pt solid black"/>
++            <fo:table-column column-width="3%" border="1pt solid black"/>
++            <fo:table-column column-width="3%" border="1pt solid black"/>
++            <fo:table-column column-width="25%" border="1pt solid black"/>
++            <fo:table-column column-width="15%" border="1pt solid black"/>
++            <fo:table-header>
++                <fo:table-row background-color="#999999" border="1pt solid black">
++                    <fo:table-cell padding="2pt" border="1pt solid black">
++                        <fo:block>Nummer</fo:block>
++                    </fo:table-cell>
++                    <fo:table-cell padding="2pt" border="1pt solid black">
++                        <fo:block>Art</fo:block>
++                    </fo:table-cell>
++                    <fo:table-cell padding="2pt" border="1pt solid black">
++                        <fo:block>Titel</fo:block>
++                    </fo:table-cell>
++                    <fo:table-cell padding="2pt" border="1pt solid black">
++                        <fo:block>SWS</fo:block>
++                    </fo:table-cell>
++                    <fo:table-cell padding="2pt" border="1pt solid black">
++                        <fo:block>ECTS</fo:block>
++                    </fo:table-cell>
++                    <fo:table-cell padding="2pt" border="1pt solid black">
++                        <fo:block>Termine</fo:block>
++                    </fo:table-cell>
++                    <fo:table-cell padding="2pt" border="1pt solid black">
++                        <fo:block>Dozenten</fo:block>
++                    </fo:table-cell>
++                </fo:table-row>
++            </fo:table-header>
++            <fo:table-body>
++                <xsl:apply-templates select="array[@key='institute']" mode="institute"/>
++            </fo:table-body>
++        </fo:table>
++    </xsl:template>
++
++    <xsl:template match="object" mode="institute">
++        <xsl:apply-templates select="array[@key='sta']" mode="sta"/>
++    </xsl:template>
++
++    <xsl:template match="object" mode="sta">
++        <fo:table-row background-color="#666666">
++            <fo:table-cell padding="2pt" number-columns-spanned="7">
++                <fo:block>
++                    <xsl:value-of select="string[@key='stoName']"/>
++                </fo:block>
++            </fo:table-cell>
++        </fo:table-row>
++        <xsl:apply-templates select="array[@key='semester']" mode="semester"/>
++    </xsl:template>
++
++    <xsl:template match="object[number[@key='sId']=$sId]" mode="semester">
++        <xsl:apply-templates select="array[@key='module']/object" mode="module">
++            <xsl:sort select="string[@key='mLvNummer']"/>
++        </xsl:apply-templates>
++    </xsl:template>
++
++    <xsl:template match="object" mode="module">
++        <fo:table-row border="1pt solid black">
++            <fo:table-cell padding="1mm">
++                <fo:block>
++                    <xsl:value-of select="string[@key='mLvNummer']"/>
++                </fo:block>
++            </fo:table-cell>
++            <fo:table-cell padding="1mm">
++                <fo:block>
++                    <xsl:for-each select="array[@key='lvs']//object//string[@key='lvtName']">
++                        <xsl:value-of select="."/>
++                        <xsl:if test="position() != last()"> + </xsl:if>
++                    </xsl:for-each>
++                </fo:block>
++            </fo:table-cell>
++            <fo:table-cell padding="1mm">
++                <fo:block>
++                    <xsl:value-of select="string[@key='mName']"/>
++                </fo:block>
++            </fo:table-cell>
++            <fo:table-cell padding="1mm">
++                <fo:block>
++                    <xsl:value-of select="string[@key='mLvSws']"/>
++                </fo:block>
++            </fo:table-cell>
++            <fo:table-cell padding="1mm">
++                <fo:block>
++                    <xsl:value-of select="string[@key='mEcts']"/>
++                </fo:block>
++            </fo:table-cell>
++            <fo:table-cell padding="1mm">
++                <fo:block>
++                    <xsl:for-each select="array[@key='lvs']//object[array[@key='termine']//string[@key='tVon']]">
++                        <fo:block><xsl:value-of select="string[@key='lvtName']"/>:</fo:block>
++                        <xsl:for-each select="array[@key='termine']//object[string[@key='tVon']]">
++                            <fo:block start-indent="5mm"><xsl:value-of select="string[@key='tTag']"/>, <xsl:value-of select="string[@key='tVon']"/> - <xsl:value-of select="string[@key='tBis']"/> Uhr (<xsl:value-of select="string[@key='gKuerzel']"/> - <xsl:value-of select="string[@key='rKuerzel']"/>)</fo:block>
++                        </xsl:for-each>
++                    </xsl:for-each>
++                </fo:block>
++            </fo:table-cell>
++            <fo:table-cell padding="1mm">
++                <fo:block>
++                    <xsl:for-each select="array[@key='lvs']//object[array[@key='termine']//object//array[@key='semesterLecturer']//string[@key='lNachname']]">
++                        <fo:block><xsl:value-of select="string[@key='lvtName']"/>:</fo:block>
++                        <xsl:for-each select="array[@key='termine']//object//array[@key='semesterLecturer']//object[string[@key='lNachname']]">
++                            <fo:block start-indent="5mm"><xsl:value-of select="string[@key='lNachname']"/>, <xsl:value-of select="string[@key='lVorname']"/></fo:block>
++                        </xsl:for-each>
++                    </xsl:for-each>
++                </fo:block>
++            </fo:table-cell>
++        </fo:table-row>
++    </xsl:template>
++
++    <xsl:template match="*|node()"/>
++</xsl:transform>
+-- 
+1.9.1
+

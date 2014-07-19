@@ -1,0 +1,154 @@
+<!DOCTYPE erm SYSTEM "erm.dtd">
+
+<erm>
+
+    <entity name="building">
+        <title lang="de" plural="Gebäude">Gebäude</title>
+        <title lang="en" plural="buildings">building</title>
+
+        <attr name="title" />
+        <attr name="street_address" />
+    </entity>
+
+    <entity name="building_floor">
+        <title lang="de" plural="Etagen">Etage</title>
+        <title lang="en" plural="floors">floor</title>
+
+        <attr name="title" />
+    </entity>
+
+	<relation>
+		<one ref="building" />
+		<many ref="building_floor" />
+	</relation>
+
+    <entity name="room">
+        <title lang="de" plural="Räume">Raum</title>
+        <title lang="en" plural="rooms">room</title>
+
+        <attr name="title" />
+        <attr name="key" />
+        <attr name="data" />
+        <attr name="notes" />
+    </entity>
+
+	<relation>
+		<one ref="building_floor" />
+		<many ref="room" />
+	</relation>
+	
+	<relation>
+		<one ref="building_floor" />
+		<many ref="room_thingie" />
+	</relation>
+	
+	<relation>
+		<one ref="room_thingie" debt="some" />
+		<one ref="room" />
+	</relation>
+	
+    <entity name="room_thingie">
+        <attr name="title" />
+        <attr name="key" />
+
+        <attr name="x" type="int" />
+        <attr name="y" type="int" />
+        <attr name="width" type="int" />
+        <attr name="height" type="int" />
+    </entity>
+
+    <entity name="room_feature">
+        <title lang="de" plural="Merkmale">Merkmal</title>
+        <title lang="en" plural="features">feature</title>
+
+        <attr name="title" />
+    </entity>
+
+	<relation name="room_has_feature">
+		<many ref="room" />
+		<many ref="room_feature" />
+		
+		<attr name="quantity" type="int" />
+	</relation>
+
+    <entity name="day">
+        <title lang="de" plural="Wochentage">Wochentag</title>
+        <title lang="en" plural="weekdays">weekday</title>
+ 
+        <attr name="title" />
+    </entity>
+
+    <entity name="timeslot">
+        <title lang="de" plural="Zeitpunkte">Zeitpunkt</title>
+        <title lang="en" plural="points in time">point in time</title>
+
+        <attr name="title" />
+    </entity>
+
+    <relation name="reservation">
+        <many ref="room" />
+        <many ref="timeslot" />
+        
+        <ref name="by" ref="person" />
+    </relation>
+    
+    <relation name="preliminary_reservation">
+        <many ref="room" />
+        <many ref="timeslot" />
+        
+        <ref name="by" ref="person" />        
+    </relation>
+    
+	<relation name="reservation_wish">
+		<many ref="room" />
+		<many ref="timeslot" />
+		
+        <ref name="by" ref="person" />
+	</relation>
+
+    <entity name="person">
+        <attr name="first_name" />
+        <attr name="last_name" />
+        <attr name="display_name" />
+    </entity>
+
+    <entity name="person_attribute">
+        <key unique="name" />
+
+        <attr name="name" />
+        <attr name="type" />
+    </entity>
+
+	<relation name="person_has_attribute">
+		<many ref="person" />
+		<many ref="person_attribute" />
+	
+        <attr name="value" />
+	</relation>
+
+    <entity name="template">
+        <key unique="name" />
+
+        <attr name="name" />
+        <attr name="content" type="text" />
+        <attr name="style" type="text" />
+    </entity>
+
+    <entity name="partial_template">
+        <key unique="name" />
+
+        <attr name="name" />
+        <attr name="content" type="text" />
+        <attr name="style" type="text" />
+    </entity>
+
+    <entity name="lang_string">
+        <key index="name" unique="name lang" />
+
+        <attr name="name" />
+        
+        <attr name="lang" maxlen="5" />
+        <attr name="value" />
+    </entity>
+
+</erm>

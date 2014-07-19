@@ -1,0 +1,44 @@
+<!ENTITY % types SYSTEM "types.ent">
+%types;
+
+<!ELEMENT erm (entity|relation)*>
+
+<!ELEMENT entity (key|attr|desc|title)*>
+<!ATTLIST entity
+    name    ID      #REQUIRED
+>
+
+<!ELEMENT relation (one|many|ref|attr|desc|title)*>
+<!ATTLIST relation
+    name    ID #IMPLIED
+>
+
+<!ELEMENT one EMPTY>
+<!ATTLIST one
+    ref     IDREF   #REQUIRED
+    debt	(all|some) 'all'
+>
+
+<!ELEMENT many EMPTY>
+<!ATTLIST many
+    ref     IDREF   #REQUIRED
+>
+
+<!ELEMENT attr EMPTY>
+<!ATTLIST attr
+    name    NMTOKEN #REQUIRED
+    %type-attrs;
+>
+
+<!ELEMENT ref EMPTY>
+<!ATTLIST ref
+    name    NMTOKEN #REQUIRED
+    debt    (optional|required) 'required'
+    ref     IDREF   #IMPLIED
+>
+
+<!ELEMENT key EMPTY>
+<!ATTLIST key
+    unique  NMTOKENS    #IMPLIED
+    index   NMTOKENS    #IMPLIED
+>

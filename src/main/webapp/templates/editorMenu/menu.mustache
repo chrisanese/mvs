@@ -1,0 +1,33 @@
+{{> global_header}}
+
+<form onsubmit="Scuttle.Editor.newBuilding(); return false" id="scuttle-newBuilding">
+<h2>Neues Gebäude anlegen</h2>
+
+<p>
+  <label>
+    <span>Adresse des Gebäudes <small>(erforderlich)</small>:</span>
+    <input type="text" name="address" />
+  </label>
+<br/>
+  <label>
+    <span>Name des Gebäudes <small>(optional)</small>:</span>
+    <input type="text" name="name" />
+  </label>
+</p>
+<p>
+  <input type="submit" value="Gebäude anlegen" />
+</p>
+</form>
+
+<h2>Gebäude</h2>
+{{^buildings}}
+<p>Keine Gebäude!</p>
+{{/buildings}}
+
+<div class="fx-accordion">
+{{#buildings}}
+  {{> building}}
+{{/buildings}}
+</div>
+
+{{> global_footer}}

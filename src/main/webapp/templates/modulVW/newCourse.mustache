@@ -1,0 +1,781 @@
+<div class="newCourse mvsNavigation">
+	<script>
+	/*
+	*
+	*/
+	$(document).ready(function(){
+		var mId = $('moduleSelect option:selected').val();
+		var mEcts = $('#moduleSelect option:selected').attr('data-mEcts');
+		$('#mEcts').text(mEcts);
+	});
+	$('#saveCourse').click(function(){
+		validate();
+	});
+	
+	/* ===================================================================
+	*  ======================= START: EDITOR INIT ========================
+	*  ===================================================================*/
+	var inhalt,literatur,info;
+	var ret;
+	
+	var oldInhalt, oldLiteratur, oldInfo;
+	
+	$('#editInhalt').click(function(){
+		inhalt = new nicEditor({fullPanel : true}).panelInstance('lvInhalt',{hasPanel: true});
+		$(nicEditors.findEditor('lvInhalt').elm).focus();
+		$('#editInhalt').addClass('hidden');
+		$('#saveInhalt').removeClass('hidden');
+		oldInhalt = nicEditors.findEditor('lvInhalt').getContent();	
+	});
+	
+	$('#saveInhalt').click(function(){
+		var newInhalt = nicEditors.findEditor('lvInhalt').getContent();
+		if(newInhalt != oldInhalt){
+			$('#lvInhalt').attr('data-edit','true');
+			oldInhalt = newInhalt;
+		}
+		inhalt.removeInstance('lvInhalt');
+		$('#editInhalt').removeClass('hidden');
+		$('#saveInhalt').addClass('hidden');
+	});
+	
+	$('#editLiteratur').click(function(){
+		literatur = new nicEditor({fullPanel : true}).panelInstance('lvLiteratur',{hasPanel: true});
+		$(nicEditors.findEditor('lvLiteratur').elm).focus();
+		$('#editLiteratur').addClass('hidden');
+		$('#saveLiteratur').removeClass('hidden');
+		oldLiteratur = nicEditors.findEditor('lvLiteratur').getContent();	
+	});
+	
+	$('#saveLiteratur').click(function(){
+		var newLiteratur = nicEditors.findEditor('lvLiteratur').getContent();
+		if(newLiteratur != oldLiteratur){
+			$('#lvInhalt').attr('data-edit','true');
+			oldLiteratur = newLiteratur;
+		}
+		literatur.removeInstance('lvLiteratur');
+		$('#editLiteratur').removeClass('hidden');
+		$('#saveLiteratur').addClass('hidden');
+	});
+	
+	$('#editInfo').click(function(){
+		info = new nicEditor({fullPanel : true}).panelInstance('lvInfo',{hasPanel: true});
+		$(nicEditors.findEditor('lvInfo').elm).focus();
+		$('#editInfo').addClass('hidden');
+		$('#saveInfo').removeClass('hidden');
+		oldInfo = nicEditors.findEditor('lvInfo').getContent();	
+	});
+	
+	$('#saveInfo').click(function(){
+		var newInfo = nicEditors.findEditor('lvInfo').getContent();
+		if(newInfo != oldInfo){
+			$('#lvInfo').attr('data-edit','true');
+			oldInfo = newInfo;
+		}
+		info.removeInstance('lvInfo');
+		$('#editInfo').removeClass('hidden');
+		$('#saveInfo').addClass('hidden');
+	});
+	/* ===================================================================
+	*  ======================== END: EDITOR INIT =========================
+	*  ===================================================================*/
+	
+	/*=========================================================
+	* ============== START: VALIDATE FUNCTION =================
+	* ========================================================= */
+	function validate(){
+		// Retrieve all form-data
+		//var iId = $('fbSelect option:selected').val();
+		var courseName = $('#lvName');
+		if(courseName.val().length == 0){
+			courseName.val('Ungueltiger Name').parents('.form-group').addClass('has-error');
+			courseName.focus();
+			setTimeout(function(){
+				courseName.val('').parents('.form-group').removeClass('has-error',1500);
+			},1500);
+		}else{
+			var iId= $('#fbSelect option:selected').val(),
+			mId = $('#moduleSelect option:selected').val(),
+			lvt = $('#lvtSelect-'+mId+' option:selected'),
+			lvtId = lvt.attr('data-lvtId'),
+			lvSws = lvt.attr('data-mlSws'),
+			lvPflicht = lvt.attr('data-mlPflicht'),
+			lvUebung = false,
+			uSws = "";
+			uPflicht = false;
+			if(lvt.attr('data-lvUebung') != undefined){
+				lvUebung = true;
+				uSws = lvt.attr('data-lvUebung');
+				uPflicht = lvt.attr('data-uPflicht');
+			}
+			var lvName = courseName.val();
+			if($('#editInhalt').hasClass('hidden')){
+				var newInhalt = nicEditors.findEditor('lvInhalt').getContent();
+				if(newInhalt != oldInhalt){
+					$('#lvInhalt').attr('data-edit','true');
+					oldInhalt = newInhalt;
+				}
+				inhalt.removeInstance('lvInhalt');
+				$('#editInhalt').removeClass('hidden');
+				$('#saveInhalt').addClass('hidden');
+			}
+			if($('#editLiteratur').hasClass('hidden')){
+				var newLiteratur = nicEditors.findEditor('lvLiteratur').getContent();
+				if(newLiteratur != oldLiteratur){
+					$('#lvInhalt').attr('data-edit','true');
+					oldLiteratur = newLiteratur;
+				}
+				literatur.removeInstance('lvLiteratur');
+				$('#editLiteratur').removeClass('hidden');
+				$('#saveLiteratur').addClass('hidden');
+			}
+			
+			if($('#editInfo').hasClass('hidden')){
+				var newInfo = nicEditors.findEditor('lvInfo').getContent();
+				if(newInfo != oldInfo){
+					$('#lvInfo').attr('data-edit','true');
+					oldInfo = newInfo;
+				}
+				info.removeInstance('lvInfo');
+				$('#editInfo').removeClass('hidden');
+				$('#saveInfo').addClass('hidden');
+			}
+			lvInhalt = oldInhalt,
+			lvLit = oldLiteratur,
+			lvInfo = oldInfo;
+			var insert = {
+				"iId" : iId,
+				"mId" : mId,
+				"lvtId" : lvtId,
+				"lvSws" : lvSws,
+				"lvPflicht" : lvPflicht,
+				"uSws" : uSws,
+				"uPflicht" : uPflicht,
+				"lvUebung" : lvUebung,
+				"lvName" : lvName,
+				"lvInhalt" : lvInhalt,
+				"lvLit" : lvLit,
+				"lvInfo" : lvInfo
+			};
+			$.ajax({
+				url: Scuttle.path('/backend/modulVW/insertLv'),
+				type: "POST",
+				data: insert
+			}).done(function(data){
+				setTimeout(function(){
+					var url = Scuttle.path("/modulVW/moduleListe:allModule");
+					$(location).attr('href',url);
+				},2500);
+			}).fail(function(req,text,error){
+				alert("Fehler beim erstellen der LV");
+			});
+		}
+	}
+	/*=========================================================
+	* =============== END: VALIDATE FUNCTION ==================
+	* ========================================================= */
+	
+	
+	$('#moduleSelect option').sort(NASort2).appendTo('#moduleSelect');
+	$('#moduleSelect option:first-child').attr("selected",true);
+	
+	$('#fbSelect').change(function(){
+		var iId = $('#fbSelect option:selected').val();
+		$('.mod').addClass('hidden');
+		$('.mod-'+iId).removeClass('hidden');
+		
+	});
+	
+	$('#moduleSelect').change(function(){
+		var mId = $('#moduleSelect option:selected').val();
+		var mEcts = $('#moduleSelect option:selected').attr('data-mEcts');
+//		var lvtSws = $('#lvtSelect-'+mId+' option:selected').attr('data-mlSws');
+		
+		$('#mEcts').text(mEcts);
+//		$('#lvtSws-'+mId).html(lvtSws + ' <b>SWS</b>')
+		
+		$('.lvtSelect').parents('.form-group').addClass('hidden');
+		$('#lvtSelect-'+mId).parents('.form-group').removeClass('hidden');
+	});
+	/*
+	* Sortierfunktion fuer select
+	*/
+	function NASort2(a, b) {    
+	    if (a.innerHTML == 'NA') {
+	        return 1;   
+	    }
+	    else if (b.innerHTML == 'NA') {
+	        return -1;   
+	    }       
+	    return (a.innerHTML > b.innerHTML) ? 1 : -1;
+	};
+	
+	// Login function
+	$('#logLink').click(function(){
+	var name = $('#loginUname').val();
+	var pwd = $('#loginPw').val();
+	var updates = {
+			"username" : name,
+			"pwd" : pwd
+		};
+		
+		$.ajax({
+			url: Scuttle.path('/backend/modulVW/login'),
+			type: "POST",
+			data: updates
+		}).done(function(data){
+			if(typeof data.wrongUser === 'undefined'){
+				if(!data.pwd){
+					alert("Wrong Password");
+				}else{
+					var url = Scuttle.path("/modulVW/moduleListe:allModule");
+					$(location).attr('href',url);
+				}
+			}else{
+				if(data.wrongUser)
+					alert("wrong user");
+				else{
+					alert("First Login");
+					var url = Scuttle.path("/modulVW/:firstLogin");
+					$(location).attr('href',url);
+				}
+			}
+		}).fail(function(req,text,error){
+			
+		});
+		
+		$('#login-modal').modal('hide');
+		$('#loginUname').val('');
+		$('#loginUPw').val('');
+	});
+	
+	/*================================================*
+	* Add new LEcturer to DB
+	*=================================================*/
+	$('#addLecturer').click(function(){
+		var lVname = $('#lVorname').val();
+		var lNname = $('#lNachname').val();
+		var lTypId = $('#lTypSelect option:selected').val();
+		var lZedat = $('#lZedat').val();
+		var lEmail = $('#lEmail').val();
+		var lTyp = $('#lTypSelect option:selected').text();
+		
+		if(lVname.length == 0){
+			$('#lVorname').parent().addClass('has-error');
+			$('#lVorname').parent().append('<span id="controlvname" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+		}
+		if(lNname.length == 0){
+			$('#lNachname').parent().addClass('has-error');
+			$('#lNachname').parent().append('<span id="controlnname" class="glyphicon glyphicon-remove form-control-feedback"></span>');
+		}
+		if(lVname.length > 0 && lNname.length > 0){
+			var lec = {
+				"typ": lTypId,
+				"vorname": lVname,
+				"nachname": lNname,
+				"zedat": lZedat,
+				"email": lEmail				
+			};
+				
+			$.ajax({
+				url: Scuttle.path('/backend/modulVW/saveLecturer'),
+				type: "POST",
+				data: lec
+			}).done(function(data){
+				if(!data.lExists){
+					// Erfolgreich hinzugefuegt				
+					$('#validateLecturer').removeClass('hidden').text(lTyp + ' wurde erfoglreich hinzugefuegt.').addClass('alert-success');
+					setTimeout(function(){
+						$('#validateLecturer').addClass('hidden').removeClass('alert-success',1500).text("");
+						$('#lecturer-modal').modal('hide');
+					},1500);
+	
+					$('#lVorname').val("");
+					$('#lNachname').val("");
+					$('#lZedat').val("");
+					$('#lEmail').val("");
+					
+					$('.has-error').removeClass('has-error');
+					$('.has-success').removeClass('has-success');
+					$('#controlvname, #controlnname').remove();
+				}else{
+					// Zedat-Account existiert bereits
+					$('#validateLecturer').removeClass('hidden').addClass('alert-danger').text("Es exitiert bereits jemand mit dem Zedat-Account "+lZedat+".");
+					setTimeout(function(){
+						$('#validateLecturer').addClass('hidden').removeClass('alert-danger',1500).text("");
+					},1500);
+					$('#lZedat').focus();
+				}
+			}).fail(function(req,text,error){
+				alert("Ein unerwarteter Fehler ist aufgetreten.");
+			});
+		}
+		
+	});
+
+	
+	$('#lVorname, #lNachname').keydown(function(){
+		$(this).parent().removeClass('has-error');
+		$(this).parent().children('span').remove();
+		if($(this).val().length > 0){
+			$(this).parent().parent().addClass('has-success');
+			$(this).parent().append('<span id="controlvname" class="glyphicon glyphicon-ok form-control-feedback"></span>');
+		}else{
+			$(this).parent().parent().removeClass('has-success');
+		}
+	});
+	
+	/* ======================================== *
+	* =========== EDIT MODULE =================
+	* ========================================= */
+	$('#editModule').click(function(){
+		var iId = $('#editMISelect option:selected').val(),
+		staId = $('#editMStaSelect option:selected').val();
+		
+		var mId = $('#editM-'+iId+'-'+staId).val();
+		var url = Scuttle.path("/modulVW/mEditInfo/"+mId+"/0/:modulEdit");
+		$(location).attr('href',url);
+	});
+	
+	$('#editMISelect, #editMStaSelect').change(function(){
+		var iId = $('#editMISelect option:selected').val();
+		var staId = $('#editMStaSelect option:selected').val();
+		
+		$('.editModule').addClass('hidden');
+		$('.editModule-'+iId+'-'+staId).removeClass('hidden');
+		
+		
+	});
+	
+	function NASortModules(a, b) { 
+	    if (a.innerHTML == 'NA') {
+	        return 1;   
+	    }
+	    else if (b.innerHTML == 'NA') {
+	        return -1;   
+	    }       
+	    return (a.innerHTML > b.innerHTML) ? 1 : -1;
+	};
+	$('.eModuleSelect').each(function(){
+		$(this).children('option').sort(NASortModules).appendTo(this);
+		$(this).children('option:first-child').attr("selected",true);	
+	});
+	
+	</script>
+
+		<p id="mvsMenu">
+	{{^loginname}}
+		<a class="btn btn-link" data-toggle="modal" data-target=".mod-login-modal">
+			Login
+		</a>
+	{{/loginname}}
+	{{#loginname}}
+		Hallo {{loginname}} <a data-go="//logout:allModule">Logout</a>
+		<br>
+		<a href="/mvs/backend/modulVW/export/sem/3" target="_blank">SS14 Export</a>  |  
+		<a href="/mvs/backend/modulVW/export/sem/4" target="_blank">WS14/15 Export</a>
+	{{/loginname}}
+	</p>
+	<!-- start: navbar -->
+	<nav class="navbar navbar-default" role="navigation" id="topNavigation">
+		<div class="container-fluid navigation-container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example">
+					<span class="sr-only">Toggle Navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>				
+				</button>
+				<a class="navbar-brand" data-go="//moduleListe:allModule">MVS</a>
+			</div>
+			<!-- start: Nav -->
+			<div class="collapse navbar-collapse" id="bs-example">
+				<ul class="nav navbar-nav">
+					<li class="active"><a data-go="//moduleListe:allModule">Alle Veranstaltungen</a></li>
+					<li><a {{#loginname}}data-go="//meineModule:meineModule"{{/loginname}}>Meine Veranstaltungen</a></li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Langfristplanung <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a {{#loginname}}data-go="//langfristPlanung/7/3/:langfristplanung"{{/loginname}}>Informatik</a></li>	
+							<li class="divider"></li>
+							<li><a {{#loginname}}data-go="//langfristPlanung/8/3/:langfristplanung"{{/loginname}}>Mathematik</a></li>
+							<li class="divider"></li>
+							<li><a {{#loginname}}data-go="//langfristPlanung/10/3/:langfristplanung"{{/loginname}}>Physik</a></li>
+							<li class="divider"></li>
+							<li><a {{#loginname}}data-go="//langfristPlanung/11/3/:langfristplanung"{{/loginname}}>Bioinformatik</a></li>				
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Modulverwaltung <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a {{#loginname}}data-go="//newModule:neuesModul"{{/loginname}}>Neues Modul</a></li>
+							<li><a {{#loginname}}data-toggle="modal" data-target=".mod-editModule-modal"{{/loginname}}>Modul Bearbeiten</a></li>
+							<li><a {{#loginname}}data-go="//newCourse:newCourse"{{/loginname}}>Neue Veranstaltung</a></li>
+							<li><a {{#loginname}}data-toggle="modal" data-target=".mod-lecturer-modal"{{/loginname}}>Neuer Dozent</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Einstellungen<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a {{#loginname}}data-toggle="modal" data-target=".mod-sto-modal"{{/loginname}}>Neue Studienordnung anlegen</a></li>
+							<li><a href="#">DB-Daten</a></li>
+						</ul>
+					</li>
+				</ul>
+				<form class="navbar-form navbar-right">
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="Suche" id="searchbar">									
+					</div>
+				</form>
+			</div>
+		<!-- end: nav -->
+		</div>
+	</nav>
+	<!-- end: navbar -->
+	
+	<form role="form" class="form-horizontal">
+		<!-- Fb -->
+		<div class="form-group">
+			<label for="fbSelect" class="col-sm-2 control-label">Institut</label>
+			<div class="col-sm-5">
+				<select id="fbSelect" class="form-control">
+					<option value="7">Informatik</option>
+					<option value="8">Mathe</option>
+					<option value="11">Bioinformatik</option>
+					<option value="10">Physik</option>
+				</select>
+			</div>
+		</div>
+		
+		<!--  -->
+		<div class="form-group">
+			<label for="moduleSelect" class="col-sm-2 control-label">Modul</label>
+			<div class="col-sm-6">
+				<select id="moduleSelect" class="form-control">
+				{{#module}}
+					<option value="{{mId}}" data-iId="{{iId}}" data-mEcts="{{mEcts}}" class="mod mod-{{iId}}">{{mName}}</option>
+				{{/module}}
+				</select>
+			</div>
+			<div class="col-sm-1"><b>ECTS</b></div>
+			<div class="col-sm-1" id="mEcts"></div>
+		</div>
+		{{#module}}
+		<div class="form-group hidden">
+			<label for="lvtSelect" class="col-sm-2 control-label">Lv Typ</label>
+			<div class="col-sm-5">
+				<select id="lvtSelect-{{mId}}" class="form-control lvtSelect">
+				{{#mLvs}}
+					<option value="{{mlId}}" data-mlSws="{{mlSws}}" data-mlPflicht="{{mlPflicht}}" data-lvtId="{{mlLvtId}}" {{#mUebung}}data-lvUebung="{{uSws}}" data-uPflicht="{{uPflicht}}"{{/mUebung}}>{{mlLvtName}}   {{mlSws}}  SWS {{#mUebung}}mit &Uuml;bung ({{uSws}} SWS){{/mUebung}}</option>
+				{{/mLvs}}
+				</select>
+			</div>
+			<div class="col-sm-1"><b>Art:</b></div>
+			<div class="col-sm-1">{{mTypName}}</div>
+		</div>
+		{{/module}}
+		<div class="form-group">
+			<label for="lvName" class="col-sm-2 control-label">Veranstaltungsname</label>
+			<div class="col-sm-8">
+				<input type="text" class="form-control" id="lvName" placeholder="Name der Veranstaltung">
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2">Inhalt:
+				<a class="linkIcons" id="editInhalt">
+		 			<span class="glyphicon glyphicon-pencil"></span>
+		 		</a>
+		 		<a class="linkIcons hidden" id="saveInhalt">
+		 			<span class="glyphicon glyphicon-plus"></span>
+		 		</a>
+			</label>
+			<div class="col-sm-5">
+				<div id="lvInhalt">
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2">Literatur:
+				<a class="linkIcons" id="editLiteratur">
+		 			<span class="glyphicon glyphicon-pencil"></span>
+		 		</a>
+		 		<a class="linkIcons hidden" id="saveLiteratur">
+		 			<span class="glyphicon glyphicon-plus"></span>
+		 		</a>
+			</label>
+			<div class="col-sm-5">
+				<div id="lvLiteratur">
+				</div>
+			</div>
+		</div>
+		<div class="form-group">
+			<label class="control-label col-sm-2">Weitere Informationen:
+				<a class="linkIcons" id="editInfo">
+		 			<span class="glyphicon glyphicon-pencil"></span>
+		 		</a>
+		 		<a class="linkIcons hidden" id="saveInfo">
+		 			<span class="glyphicon glyphicon-plus"></span>
+		 		</a>
+			</label>
+			<div class="col-sm-5">
+				<div id="lvInfo">
+				</div>
+			</div>
+		</div>
+	</form>
+	<div class="container-fluid text-center">
+		<button id="saveCourse" class="btn btn-success">Veranstaltung erstellen</button>
+	</div>
+		
+		
+	<!--  ==================================================== -->
+	<!--  ================= MODAL SECTION ==================== -->
+	<!--  ==================================================== -->
+	<!-- Start: New Lecturer Modal -->
+	<div class="modal fade mod-lecturer-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" id="lecturer-modal">
+		<div class="modal-dialog modal-md">
+			<div class="modal-content">
+				<div class="modal-header text-center">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h2 class="modal-title">Neuen Dozenten/Tutor hinzuf&uuml;gen</h2>
+				</div>
+				<div class="modal-body">
+					<div class="alert text-center hidden" id="validateLecturer"></div>
+					<form class="form-horizontal" role="form">
+						<div class="form-group has-feedback">
+							<label for="lTypSelect" class="col-sm-3 control-label">Typ</label>
+							<div class="col-sm-9">
+								<select id="lTypSelect" class="form-control">
+									<option class="dropdown-option lTypOption" value="1">Dozent</option>
+									<option class="dropdown-option lTypOption" value="2">Tutor</option>
+									<option class="dropdown-option lTypOption" value="3">Verwaltung</option>
+									<option class="dropdown-option lTypOption" value="4">Sekretariat</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group has-feedback">
+							<label for="lVorname" class="col-sm-3 control-label">Vorname *</label>
+							<div class="col-sm-9">
+								<input type="text" id="lVorname" class="form-control" placeholder="Vorname" required="required">
+							</div>
+						</div>
+						<div class="form-group has-feedback">
+							<label for="lNachname" class="col-sm-3 control-label">Nachname *</label>
+							<div class="col-sm-9">
+								<input type="text" id="lNachname" class="form-control" placeholder="Nachname" required="required">
+							</div>							
+						</div>
+
+						<div class="form-group has-feedback">
+							<label for="lZedat" class="col-sm-3 control-label">Zedat Account:</label>
+							<div class="col-sm-9">
+								<input type="text" id="lZedat" class="form-control" placeholder="Zedat-Account">
+							</div>
+						</div>
+						<div class="form-group has-feedback">
+							<label for="lEmail" class="col-sm-3 control-label">Email:</label>
+							<div class="col-sm-9">
+								<input type="email" id="lEmail" class="form-control" placeholder="Email">
+							</div>
+						</div>
+					</form>
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Schliessen</button>
+					<button type="button" class="btn btn-primary" id="addLecturer">Hinzuf&uuml;gen</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End New Lecturer Modal -->
+	
+	
+	<!-- Start: Edit Module Modal -->
+	<div class="modal fade mod-editModule-modal" tabindex="-1" role="dialog" aria-labelledby="" aria-hidden="true" id="editModule-modal">
+		<div class="modal-dialog modal-md">
+			<div class="modal-content">
+				<div class="modal-header text-center">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h2 class="modal-title">Welches Modul soll bearbeitet werden?</h2>
+				</div>
+				<div class="modal-body">
+				{{#editM}}
+					<form class="form-horizontal" role="form">
+						<div class="form-group has-feedback">
+							<label for="editMISelect" class="col-sm-3 control-label">Studiengang</label>
+							<div class="col-sm-9">
+								<select id="editMISelect" class="form-control">
+									<option class="dropdown-option lTypOption" value="1">Informatik</option>
+									<option class="dropdown-option lTypOption" value="2">Mathematik</option>
+									<option class="dropdown-option lTypOption" value="3">Physik</option>
+									<option class="dropdown-option lTypOption" value="4">Bioinformatik</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group has-feedback">
+							<label for="editMStaSelect" class="col-sm-3 control-label">Studienart</label>
+							<div class="col-sm-9">
+								<select id="editMStaSelect" class="form-control">
+									<option class="dropdown-option lTypOption" value="1">Bachelor</option>
+									<option class="dropdown-option lTypOption" value="2">Master</option>
+									<option class="dropdown-option lTypOption" value="3">Lehramt</option>
+								</select>
+							</div>
+						</div>
+						<div class="form-group has-feedback editModule editModule-1-1">
+							<label for="editM-1-1" class="col-sm-3 control-label">Modul w&auml;hlen</label>
+							<div class="col-sm-9">
+								<select id="editM-1-1" class="form-control eModuleSelect">
+									{{#binfo}}
+									<option class="dropdown-option module module-{{staId}}" value="{{mId}}">{{mName}}</option>
+									{{/binfo}}
+								</select>
+							</div>
+						</div>
+						<div class="form-group has-feedback editModule editModule-1-2 hidden">
+							<label for="editM-1-2" class="col-sm-3 control-label">Modul w&auml;hlen</label>
+							<div class="col-sm-9">
+								<select id="editM-1-2" class="form-control eModuleSelect">
+									{{#minfo}}
+									<option class="dropdown-option module module-{{staId}}" value="{{mId}}">{{mName}}</option>
+									{{/minfo}}
+								</select>
+							</div>
+						</div>
+						<div class="form-group has-feedback editModule editModule-1-3 hidden">
+							<label for="editM-1-3" class="col-sm-3 control-label">Modul w&auml;hlen</label>
+							<div class="col-sm-9">
+								<select id="editM-1-3" class="form-control eModuleSelect">
+									{{#linfo}}
+									<option class="dropdown-option module module-{{staId}}" value="{{mId}}">{{mName}}</option>
+									{{/linfo}}
+								</select>
+							</div>
+						</div>
+						<div class="form-group has-feedback editModule editModule-2-1 hidden">
+							<label for="editM-2-1" class="col-sm-3 control-label">Modul w&auml;hlen</label>
+							<div class="col-sm-9">
+								<select id="editM-2-1" class="form-control eModuleSelect">
+									{{#bmathe}}
+									<option class="dropdown-option module module-{{staId}}" value="{{mId}}">{{mName}}</option>
+									{{/bmathe}}
+								</select>
+							</div>
+						</div>
+						<div class="form-group has-feedback editModule editModule-2-2 hidden">
+							<label for="editM-2-2" class="col-sm-3 control-label">Modul w&auml;hlen</label>
+							<div class="col-sm-9">
+								<select id="editM-2-2" class="form-control eModuleSelect">
+									{{#mmathe}}
+									<option class="dropdown-option module module-{{staId}}" value="{{mId}}">{{mName}}</option>
+									{{/mmathe}}
+								</select>
+							</div>
+						</div>
+						<div class="form-group has-feedback editModule editModule-2-3 hidden">
+							<label for="editM-2-3" class="col-sm-3 control-label">Modul w&auml;hlen</label>
+							<div class="col-sm-9">
+								<select id="editM-2-3" class="form-control eModuleSelect">
+									{{#lmathe}}
+									<option class="dropdown-option module module-{{staId}}" value="{{mId}}">{{mName}}</option>
+									{{/lmathe}}
+								</select>
+							</div>
+						</div>
+						<div class="form-group has-feedback editModule editModule-3-1 hidden">
+							<label for="editM-3-1" class="col-sm-3 control-label">Modul w&auml;hlen</label>
+							<div class="col-sm-9">
+								<select id="editM-3-1" class="form-control eModuleSelect">
+									{{#bphysik}}
+									<option class="dropdown-option module module-{{staId}}" value="{{mId}}">{{mName}}</option>
+									{{/bphysik}}
+								</select>
+							</div>
+						</div>
+						<div class="form-group has-feedback editModule editModule-3-2 hidden">
+							<label for="editM-3-2" class="col-sm-3 control-label">Modul w&auml;hlen</label>
+							<div class="col-sm-9">
+								<select id="editM-3-2" class="form-control eModuleSelect">
+									{{#mphysik}}
+									<option class="dropdown-option module module-{{staId}}" value="{{mId}}">{{mName}}</option>
+									{{/mphysik}}
+								</select>
+							</div>
+						</div>
+						<div class="form-group has-feedback editModule editModule-3-3 hidden">
+							<label for="editM-3-3" class="col-sm-3 control-label">Modul w&auml;hlen</label>
+							<div class="col-sm-9">
+								<select id="editM-3-3" class="form-control eModuleSelect">
+									{{#lphysik}}
+									<option class="dropdown-option module module-{{staId}}" value="{{mId}}">{{mName}}</option>
+									{{/lphysik}}
+								</select>
+							</div>
+						</div>						
+						<div class="form-group has-feedback editModule editModule-4-1 hidden">
+							<label for="editM-4-1" class="col-sm-3 control-label">Modul w&auml;hlen</label>
+							<div class="col-sm-9">
+								<select id="editM-4-1" class="form-control eModuleSelect">
+									{{#bbio}}
+									<option class="dropdown-option module module-{{staId}}" value="{{mId}}">{{mName}}</option>
+									{{/bbio}}
+								</select>
+							</div>
+						</div>
+						<div class="form-group has-feedback editModule editModule-4-2 hidden">
+							<label for="editM-4-2" class="col-sm-3 control-label">Modul w&auml;hlen</label>
+							<div class="col-sm-9">
+								<select id="editM-4-2" class="form-control eModuleSelect">
+									{{#mbio}}
+									<option class="dropdown-option module module-{{staId}}" value="{{mId}}">{{mName}}</option>
+									{{/mbio}}
+								</select>
+							</div>
+						</div>
+						<div class="form-group has-feedback editModule editModule-4-3 hidden">
+							<label for="editM-4-3" class="col-sm-3 control-label">Modul w&auml;hlen</label>
+							<div class="col-sm-9">
+								<select id="editM-4-3" class="form-control eModuleSelect">
+									{{#lbio}}
+									<option class="dropdown-option module module-{{staId}}" value="{{mId}}">{{mName}}</option>
+									{{/lbio}}
+								</select>
+							</div>
+						</div>
+					</form>
+				{{/editM}}
+				</div>
+				<div class="modal-footer">
+					<button type="button" class="btn btn-default" data-dismiss="modal">Schliessen</button>
+					<button type="button" class="btn btn-primary" id="editModule">Bearbeiten</button>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Edit Module Modal -->
+	
+	<!-- Start: Login Modal -->
+	<div class="modal fade mod-login-modal" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true" id="login-modal">
+		<div class="modal-dialog modal-sm">
+			<div class="modal-content">
+				<div class="modal-header text-center">
+					<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+					<h2 class="modal-title">Login</h2>
+				</div>
+				<div class="modal-body">
+				<input type="text" id="loginUname" class="form-control" placeholder="Benutzername" required="required">
+				<input type="password" id="loginPw" class="form-control" placeholder="Passwort" required="required">
+				</div>
+				<div class="modal-footer">
+					<div class="text-center">						
+						<a id="logLink" class="btn btn-success signin">Login</a>
+						<button type="button" class="btn btn-default" data-dismiss="modal">Schliessen</button>
+					</div>
+				</div>
+			</div>
+		</div>
+	</div>
+	<!-- End Login Modal -->
+	{{>newSTOTemplate}}
+	
+</div>

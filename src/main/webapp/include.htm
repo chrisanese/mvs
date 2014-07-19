@@ -1,0 +1,28 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="utf-8" />
+<title>Scuttle FU/MI</title>
+<link rel="stylesheet" type="text/css" href="backend/styles" />
+</head>
+
+<body class="scuttle-popup">
+
+  <div id="startscreen" class="scuttle-interlude">Lade
+    Buchungssystem (JavaScript muss aktiviert sein, das scheint nicht der
+    Fall zu sein?)...</div>
+
+  <script type="text/javascript">
+    document.getElementById('startscreen').innerHTML = 'Lade Buchungssystem...';
+  </script>
+
+  <script type="text/javascript" src="backend/libs"></script>
+
+  <script type="text/javascript">
+    $(function() {
+      Scuttle.show('View');
+    });
+  </script>
+
+</body>
+</html>

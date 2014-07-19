@@ -1,0 +1,70 @@
+<script>
+	// Login function
+	$('#logLink').click(function(){
+		var name = $('#loginUname').val();
+		var pwd = $('#loginPw').val();
+		var updates = {
+			"username" : name,
+			"pwd" : pwd
+		};
+			
+		$.ajax({
+			url: Scuttle.path('/backend/modulVW/login'),
+			type: "POST",
+			data: updates
+		}).done(function(data){
+			if(typeof data.wrongUser === 'undefined'){
+				if(!data.pwd){
+					alert("Wrong Password");
+				}else{
+					var url = Scuttle.path("/modulVW/moduleListe:allModule");
+					$(location).attr('href',url);
+				}
+			}else{
+				if(data.wrongUser)
+					alert("Ungueltiger Benutzername");
+				else{
+					alert("First Login");
+					var url = Scuttle.path("/modulVW/:firstLogin");
+					$(location).attr('href',url);
+				}
+			}
+		}).fail(function(req,text,error){});
+			
+		$('#login-modal').modal('hide');
+		$('#loginUname').val('');
+		$('#loginUPw').val('');
+	});
+</script>
+<p id="mvsMenu">
+{{^loginname}}
+	<a class="btn btn-link" data-toggle="modal" data-target=".mod-login-modal">
+		Login
+	</a>
+{{/loginname}}
+{{#loginname}}
+	Hallo {{loginname}} <a data-go="//logout:allModule">Logout</a> 
+{{/loginname}}
+</p>
+<!-- Start: Login Modal -->
+<div class="modal fade mod-login-modal" tabindex="-1" role="dialog" aria-labelledby="Login" aria-hidden="true" id="login-modal">
+	<div class="modal-dialog modal-sm">
+		<div class="modal-content">
+			<div class="modal-header text-center">
+				<button type="button" class="close" data-dismiss="modal" aria-hidden="true">&times;</button>
+				<h2 class="modal-title">Login</h2>
+			</div>
+			<div class="modal-body">
+			<input type="text" id="loginUname" class="form-control" placeholder="Benutzername" required="required">
+			<input type="password" id="loginPw" class="form-control" placeholder="Passwort" required="required">
+			</div>
+			<div class="modal-footer">
+				<div class="text-center">						
+					<a id="logLink" class="btn btn-success signin">Login</a>
+					<button type="button" class="btn btn-default" data-dismiss="modal">Schliessen</button>
+				</div>
+			</div>
+		</div>
+	</div>
+</div>
+<!-- End Login Modal -->

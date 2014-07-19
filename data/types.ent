@@ -1,0 +1,16 @@
+<!ENTITY % type-attrs "
+    debt    (optional|required) 'required'
+	type    (int|string|text) 'string'
+    maxlen  CDATA   #IMPLIED
+	">
+
+<!ELEMENT desc (#PCDATA)*>
+<!ATTLIST desc
+    lang    NMTOKENS    #IMPLIED
+>
+
+<!ELEMENT title (#PCDATA)*>
+<!ATTLIST title
+    lang    NMTOKENS    #IMPLIED
+    plural  CDATA       #IMPLIED
+>

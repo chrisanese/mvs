@@ -1,0 +1,22 @@
+<!ENTITY % types SYSTEM "types.ent">
+%types;
+
+<!ELEMENT tables (table)*>
+
+<!ELEMENT table (key|attr|desc|title)*>
+<!ATTLIST table
+    name    ID      #REQUIRED
+>
+
+<!ELEMENT attr EMPTY>
+<!ATTLIST attr
+    name    NMTOKEN #REQUIRED
+    ref     IDREF   #IMPLIED
+	%type-attrs;
+>
+
+<!ELEMENT key EMPTY>
+<!ATTLIST key
+    unique  NMTOKENS    #IMPLIED
+    index   NMTOKEN     #IMPLIED
+>

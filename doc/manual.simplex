@@ -1,0 +1,110 @@
+@title
+    **Scuttle**
+    *Developers and Sysadmins Manual*
+
+@authors
+    Tom Bullmann
+    Julian Fleischer
+    Nicolas Lehmann
+    Stephan Sundermann
+
+newpage
+
+tableofcontents
+newpage
+
+
+=   Installing
+
+    
+
+
+=   Hacking
+
+    
+
+
+=   Technologies
+
+    Scuttle makes use of the following technologies:
+
+
+==  Building / Development / Unit Testing
+
+::  Java 7: ...
+
+::  Maven 3: ...
+
+::  YUI Compressor: ...
+
+::  Less: ...
+
+::  JUnit: ...
+
+::  Apache Derby: ...
+
+
+==  Backend
+
+::  JPA: ...
+
+::  Servlet API: ...
+
+::  EclipseLink: ...
+
+::  Apache FOP: XSL-FO, PDF
+
+::  Google Guava: ...
+
+::  Apache Commons: ...
+
+::  Mustache Java: ...
+
+
+==  Frontend
+
+::  mustache.js: ...
+
+::  jQuery: jQuery
+
+::  jQuery UI: UI
+
+::  jQuery chosen: ...
+
+::  jQuery tinysort: ...
+
+::  sorttable.js: ...
+
+::  sprintf.js: ...
+
+
+=   Architecture
+
+    
+==  Modules
+
+    
+
+
+=   Data Model
+
+
+
+=   Specific Modules
+
+
+
+==  Scheduler
+
+
+
+==  SakaiLink
+
+    
+
+==  EventoBufferLink
+
+    
+=   Frequently Asked Questions
+
+

@@ -1,0 +1,22 @@
+<form>
+
+<table>
+{{#config}}
+<tr>
+    <td>
+        {{key}}
+    </td>
+    <td>
+        <input type="text" value="{{value}}" name="value[{{key}}]" />
+    </td>
+    <td>
+        {{comment}}
+    </td>
+</tr>
+{{/config}}
+</table>
+
+
+
+</form>
+

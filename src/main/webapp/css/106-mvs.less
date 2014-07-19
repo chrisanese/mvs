@@ -1,0 +1,205 @@
+/* Colo definition */
+@mvsLightBlue: #428bca;
+@mvsDarkBlue: #036;
+
+/* GLOBAL STYLE DEFINITION */
+#scuttle-scene h2.panel-title{
+	color: #fff;	
+}
+
+#mvsMenu {
+	position: absolute;
+    top: 20px;
+    left: 55%;
+    width: 625px;
+    margin-left: -200px;
+    text-align: right;
+}
+
+#mvsExport {
+	position: absolute;
+    top: 60px;
+    left: 55%;
+    width: 625px;
+    margin-left: -200px;
+    text-align: right;
+}
+
+.mvsNavigation{
+	mvsMenu{
+		position: absolute;
+		top: 40px;
+        left: 50%;
+        width: 625px;
+        margin-left: -200px;
+        text-align: right;
+	}
+	
+	#mvsMenu .popover{
+    	width: 300px;
+    }
+    
+    #mvsMenu .popver-title{
+    	background-color: @mvsLightBlue;
+    	color: #fff;
+    }
+    
+    nav#topNavigation{
+	 	background-color: @mvsLightBlue;
+	 	a{
+	 		color: #fff;
+	 	}
+	 	border-bottom: 0px;
+	 }
+	 
+	 #topNavigation a:hover{
+	 	background-color: @mvsDarkBlue;
+	 }
+	 
+	 #topNavigation li.active a, #topNavigation li.active a:hover{
+	 	background-color: #fff;
+	 	color: @mvsLightBlue;
+	 }
+	 
+	 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus{
+	 	background-color: @mvsDarkBlue;
+	 }
+	 
+	 .navbar-nav>li>.dropdown-menu{
+	 	background-color: @mvsLightBlue;
+	 }
+}
+
+/* Design for AlleModule  */
+.allModule{
+	
+
+	#bContainer{
+		padding-left: 0;
+	}
+	/* SIDEBAR */
+	input#showModuleName, input#showExtendedView{
+		margin-left: 5px;
+	}
+	.sidebar{
+	 	padding-left: 0px;
+	 }
+	
+	#sidebar, #sidebar a{
+	 	background-color: @mVWHellblau;
+	 	color: #fff;
+	 }
+	 
+	 #sidebar a:hover{
+	 	background-color: @mVWDunkelblau;
+	 }
+	 
+	  #sidebar li.active a, #sidebar li.active a:hover{
+	 	background-color: #fff;
+	 	color: @mVWHellblau;
+	 }
+	 /* END SIDEBAR */
+
+	small.td-fullwidth{
+	 	white-space: nowrap;
+	 }
+	 
+	 div[id*='panelHeadin-'] h2{
+	 	color: #fff;
+	 }
+	 
+}
+
+//.alleModule{
+	 
+	 /*===========================================================
+	  * 
+	  ===========================================================*/
+    
+    
+//}
+
+/* Design for MeineModule  */
+
+/* Design for NewModule */
+
+/* Design for EditModule */
+.mEdit {
+	div#modulePanel > div > h2{
+		color: #fff;
+	}
+}
+
+/* Design for Langfristplanung */
+
+
+/* Design for lvPlanung */
+.editLv {
+	z-index: 1 !important;
+ 	
+ 	h2#editTitle{
+ 		color:	#fff;	
+ 	}
+ 	
+ 	p.editLabel{
+ 		color: #0066cc;
+ 		font-size: 18px;
+ 		font-weight: bold;
+ 		padding-top: 5px;
+ 		
+ 		white-space: nowrap;
+ 	}
+ 	
+ 	p.tutorienLabel, p.lvLabel, p.atLabel{
+ 		color: #0066cc;
+ 		font-size: 18px;
+ 		font-weight: bold;
+ 		margin-top: 25px;
+ 	}
+ 	
+ 	/*.editLv .linkIcons>span.glyphicon{
+ 		font-size: 14px;
+ 	}*/
+ 	
+ 	a.editLecturer{
+ 		margin-top: 5px;
+ 		margin-left: 25px;
+ 		font-size: 14px;
+ 	}
+ 	
+ 	.tutorium > span{
+ 		margin-right: 20px;
+ 	}
+ 	
+ 	.btn-circle {
+		border-radius: 15px;
+	}
+	
+	div#tutorien, div#lvs, div#ats {
+		max-width: 800px;
+		margin-top:	15px;
+		margin-left: 25px;
+	}
+	
+	div.row.tutorium, div.row.lv, div.row.atermin, div#modInhalt, div#modLiteratur, div#modLiteratur{
+		margin-top: 5px;
+		margin-bottom: 5px;
+		vertical-align: middle;
+	}
+	
+	.linkIcons >span.glyphicon{
+		font-size: 14px;
+		color: #000;
+	}
+	
+	.lvTitelLabel{
+		color: #0066cc;
+ 		font-size: 18px;
+ 		font-weight: bold;
+ 		margin-top: 25px;
+	}
+	
+	#lvTitel{
+		margin-left: 25px;
+	}
+}

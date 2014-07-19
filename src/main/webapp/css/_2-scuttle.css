@@ -1,0 +1,306 @@
+body {
+	overflow: scroll;
+}
+
+#scuttle-loading,#scuttle-stage,.ui-widget {
+	font-family: "Trebuchet MS", sans-serif;
+	font-size: 14px;
+}
+
+#scuttle-loading {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background: rgba(0, 0, 0, 0.5);
+}
+
+#scuttle-loading span {
+	width: 200px;
+	margin-left: -100px;
+	height: 60px;
+	margin-top: -100px;
+	background: white url("../img/ajax-loader.gif") no-repeat center 35px;
+	position: absolute;
+	top: 50%;
+	left: 50%;
+	border: 2px solid black;
+	border-radius: 15px;
+	line-height: 40px;
+	vertical-align: middle;
+	text-align: center;
+}
+
+.scuttle-overflow-hidden {
+	overflow: hidden !important;
+}
+
+#scuttle-stage {
+	width: 100%;
+	height: 100%;
+	position: fixed;
+	top: 0;
+	left: 0;
+	background: rgba(0, 0, 0, 0.5);
+	overflow: auto;
+}
+
+#scuttle-scenery {
+	position: relative;
+	background-color: white;
+	border-radius: 15px;
+	border: 2px solid black;
+	overflow: auto;
+	width: 900px;
+	height: 600px;
+	margin: 30px auto;
+	padding: 10px;
+}
+
+.scuttle-notification {
+	position: absolute;
+	top: 50px;
+	left: 50%;
+	width: 600px;
+	margin-left: -300px;
+	height: 45px;
+	background: rgba(200, 255, 200, 0.8);
+	border: 2px solid black;
+	border-radius: 15px;
+	text-align: center;
+	cursor: pointer;
+}
+
+.scuttle-notification>span {
+	display: block;
+	margin: .5em;
+}
+
+.scuttle-notification.note {
+	background: rgba(255, 255, 200, 0.8);
+}
+
+.scuttle-notification.warn {
+	background: rgba(255, 225, 200, 0.8);
+}
+
+.scuttle-notification.fail {
+	background: rgba(255, 200, 200, 0.7);
+}
+
+input[type='submit']:disabled {
+	padding-left: 20px;
+	background-image: url("../img/ajax-loader.gif") no-repeat 5px center;
+}
+
+.ui-accordion-header {
+	border: 1px solid black;
+}
+
+#scuttle-scenery input[type='text'] {
+	width: 200px;
+	font: 13px/14px "Trebuchet MS", sans-serif;
+	border: 2px solid black;
+}
+
+#scuttle-scenery input[type='button'],#scuttle-scenery input[type='submit']
+	{
+	background-color: white;
+	color: blue;
+	border: 2px solid blue;
+	border-radius: 10px;
+	font: 13px/14px "Trebuchet MS", sans-serif;
+	cursor: pointer;
+}
+
+#scuttle-scenery input[type='button']:active,#scuttle-scenery input[type='submit']:active,#scuttle-scenery input[type='button'].active
+	{
+	background-color: blue;
+	color: white;
+	outline: none;
+}
+
+#scuttle-scenery a {
+	color: blue;
+	text-decoration: none;
+}
+
+#scuttle-scenery a:hover {
+	text-decoration: underline;
+}
+
+#scuttle-scenery label>span {
+	display: block;
+	width: 250px;
+	float: left;
+	line-height: 22px;
+	vertical-align: middle;
+}
+
+#scuttle-scenery label>*+span {
+	float: none;
+}
+
+#scuttle-scenery label>span+* {
+	clear: left;
+}
+
+.scuttle-floors label {
+	display: block;
+	float: left;
+	width: 150px;
+	cursor: pointer;
+}
+
+.scuttle-floors br {
+	clear: left;
+}
+
+.scuttle-toolbox {
+	width: 901px;
+	height: 30px;
+	margin-top: 15px;
+	margin-bottom: 8px;
+}
+
+.scuttle-toolbox>input[type="text"] {
+	width: 100px !important;
+}
+
+#scuttle-editor-controls {
+	position: relative;
+	width: 250px;
+}
+
+#scuttle-editor-inspector {
+	position: absolute;
+	margin-top: -38px;
+	margin-left: 250px;
+	width: 651px;
+	text-align: right;
+}
+
+#scuttle-stage {
+	-webkit-touch-callout: none;
+	-webkit-user-select: none;
+	-khtml-user-select: none;
+	-moz-user-select: none;
+	-ms-user-select: none;
+	user-select: none;
+}
+
+#scuttle-grid,#scuttle-grid * {
+	cursor: crosshair;
+}
+
+#scuttle-grid {
+	position: absolute;
+	width: 901px;
+	height: 551px;
+	background: url("../img/grid.png") repeat;
+	overflow: hidden;
+	z-index: 3;
+}
+
+.help-hint {
+	z-index: 1;
+	position: absolute;
+	top: 60px;
+}
+
+#scuttle-hover {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	background-color: rgba(128, 128, 128, 0.5);
+}
+
+#scuttle-editor-drawing-box,.scuttle-editor-object {
+	position: absolute;
+}
+
+.scuttle-editor-object.selected {
+	outline: 1px solid red;
+	z-index: 11;
+}
+
+#scuttle-editor-drawing-box.tool1,.scuttle-room {
+	border: 1px solid black;
+	padding: 9px 9px 0 0;
+	background: white;
+	z-index: 10;
+}
+
+#scuttle-editor-drawing-box.tool2,.scuttle-floor {
+	padding: 11px 11px 0 0;
+	background: #c0c0c0;
+	z-index: 9;
+}
+
+#scuttle-editor-drawing-box.tool4,.scuttle-grass {
+	background: #99ff99;
+	padding: 11px 11px 0 0;
+	z-index: 7;
+}
+
+#scuttle-editor-drawing-box.tool5,.scuttle-street {
+	padding: 11px 11px 0 0;
+	background: gray;
+	z-index: 8;
+}
+
+#scuttle-editor-inspector input[type="text"] {
+	width: 40px;
+}
+
+#scuttle-room-name {
+	width: 80px !important;
+}
+
+.scuttle-door {
+	position: absolute;
+	width: 10px;
+	height: 10px;
+	background-image: url("../img/door.png");
+}
+
+.r90 {
+	-webkit-transform: rotate(90deg);
+	-moz-transform: rotate(90deg);
+	-ms-transform: rotate(90deg);
+	-o-transform: rotate(90deg);
+	transform: rotate(90deg);
+}
+
+.r180 {
+	-webkit-transform: rotate(180deg);
+	-moz-transform: rotate(180deg);
+	-ms-transform: rotate(180deg);
+	-o-transform: rotate(180deg);
+	transform: rotate(180deg);
+}
+
+.r270 {
+	-webkit-transform: rotate(270deg);
+	-moz-transform: rotate(270deg);
+	-ms-transform: rotate(270deg);
+	-o-transform: rotate(270deg);
+	transform: rotate(270deg);
+}
+
+.tl {
+	-webkit-transform-origin: 0 0;
+	-moz-transform-origin: 0 0;
+	-ms-transform-origin: 0 0;
+	-o-transform-origin: 0 0;
+	transform-origin: 0 0;
+}
+
+.scuttle-synchronizing {
+	opacity: 0.3;
+	background-image: url("../img/ajax-loader.gif");
+	background-repeat: no-repeat;
+	background-position: center center;
+}
+

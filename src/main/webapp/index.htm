@@ -1,0 +1,49 @@
+<!DOCTYPE html>
+<html class="scuttle">
+<head>
+<meta charset="utf-8" />
+<title>{{title}}</title>
+<!-- Latest compiled and minified CSS -->
+<link rel="stylesheet" href="//netdna.bootstrapcdn.com/bootstrap/3.1.1/css/bootstrap.min.css">
+<link rel="stylesheet" type="text/css" href="{{context}}/backend/styles" />
+<!--[if lte IE 9]>
+<script type="text/javascript">
+window.location = "{{context}}/iewarning.htm";
+</script>
+<![endif]-->
+</head>
+
+<body>
+
+	<div id="page">
+		<div id="header">
+			<a data-go="/start:index"> <img src="{{context}}/img/fu_logo.gif"
+				id="fu-logo" />
+			</a>
+		</div>
+
+		<div id="scuttle-pre-loading" class="scuttle-interlude">{{preLoading}}</div>
+
+		<div id="footer">
+			<a data-go="/start:index">Start</a> | <a data-go="/admin:index">Admin</a> | <a
+				href="http://github.com/scravy/scuttle">Scuttle auf github</a>
+		</div>
+	</div>
+
+	<script type="text/javascript">
+        document.getElementById('scuttle-pre-loading').innerHTML = "{{loading}}";
+    </script>
+
+	<script type="text/javascript" src="{{context}}/backend/libs"></script>
+
+	<!-- Latest compiled and minified JavaScript -->
+	<script src="//netdna.bootstrapcdn.com/bootstrap/3.1.1/js/bootstrap.min.js"></script>
+
+	<script type="text/javascript">
+        $(function() {
+            Scuttle.contextPath = "{{context}}";
+            Scuttle.show("{{path}}");
+        });
+    </script>
+</body>
+</html>

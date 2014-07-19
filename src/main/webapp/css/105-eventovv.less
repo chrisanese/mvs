@@ -1,0 +1,244 @@
+.info, .success, .warning, .errormsg, .validation {
+  border: 1px solid;
+  margin: 10px 0px;
+  padding:15px 10px 15px 15px;
+  background-repeat: no-repeat;
+  background-position: 10px center;
+}
+.info {
+  color: #00529B;
+  background-color: #BDE5F8;
+}
+.success {
+  color: #4F8A10;
+  background-color: #DFF2BF;
+}
+.warning {
+  color: #9F6000;
+  background-color: #FEEFB3;
+}
+.errormsg {
+  color: #D8000C;
+  background-color: #FFBABA;
+}
+
+.eventovv {
+
+    table {
+        border-collapse: collapse;
+    }
+    
+    div.site {
+        border: 2px solid @fu-blau;
+        border-radius: 5px;
+        position: relative;
+        margin-bottom: 10px;
+    }
+
+    h5 {
+        font-size: 14px;
+    }
+    
+    table.site-table {
+        width: 100%;
+        border: 0 solid white !important;
+    }
+
+    td {
+        border: 1px solid @fu-blau;
+        padding: 0;
+        margin: 0;
+        height: 30px;
+    }
+    
+    td.lecturers {
+        width: 125px;
+    }
+    
+    td.zyklus, td.zeit {
+        width: 155px;
+    }
+
+    td.ort {
+        width: 250px;
+    }
+
+    td.typ {
+        width: 100px;
+    }
+    
+    td.lecturers > table {
+        width: 100%;
+    }
+    
+    td.lecturers td {
+        border: none;
+    }
+    
+    td.mail, td.web {
+        width: 50px;
+    }
+    
+    td.lecturers tr + tr td {
+        border-top: 1px solid @fu-blau;
+    }
+    
+    td.typ, td.ects, td.sws {
+        text-align: center;
+    }
+
+    span.zyklus, span.zeit, span.ort {
+        display: block;
+        text-align: center;
+        font-size: 10px;
+        line-height: 10px;
+    }
+    
+    span.zyklus + span.zyklus {
+        display: none;
+    }
+    
+    tr.description {
+        div.text {
+            margin:10px;
+        }
+    }
+    
+    td.expander, td.app-expander {
+        width: 80px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 30px;
+        line-height: 30px;
+        vertical-align: baseline;
+        
+        a {
+            display: block;
+        }
+    }
+    
+    .hidden, .collapsed {
+        display: none;
+    }
+
+    .language-hidden {
+        display: none !important;
+    }
+    
+    .expanded tr.hidden, .expanded-appointment > {
+        display: table-row;
+    }
+    
+    a.expander:before {
+        content: "+";
+    }
+    
+    .expanded a.expander:before {
+        content: "–";
+    }
+
+    a.app-expander:before {
+        content: "+";
+    }
+
+    a.app-expanded:before {
+        content: "–" !important;
+    }
+
+    
+    span.text, div.text {
+        display: block;
+        margin-left: 5px;
+        margin-right: 5px;
+    }
+    
+    tr.metaInfo span.text {
+        text-align: center;
+    }
+
+    .selected {
+        font-weight: bold;
+    }
+
+    .error {
+        background-color: tomato;
+    }
+
+    .subjectselector a {
+        text-size: 12px;
+    }
+
+    .subject-nav {
+        top: 0;
+        left: 0;
+        position: fixed;
+        border: 2px solid @fu-blau;
+        border-radius: 5px;
+        margin: 0;
+        background: white;
+        z-index: 100;
+    }
+
+    .subject-nav ul {
+        list-style-type: none;
+        padding: 0;
+        display: none;
+    }
+
+    .subject-nav ul li {
+        margin: 5px;
+    }
+
+    .menu-expander:hover ul {
+        display:block;
+    }
+
+    .menu-expander:before {
+        content: ">>";
+        width: 80px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 30px;
+        line-height: 30px;
+        vertical-align: baseline;
+        color: #06c;
+    }
+
+    .notpublished {
+        background-color: beige;
+    }
+
+    #languagemenu {
+        float: right;
+        margin-right: 20px;
+    }
+
+    #languagemenu span a img {
+        width: 25px;
+        height: 15px;
+    }
+
+    .chart {
+        width: 100%;
+    }
+
+    .status {
+        width: 75px;
+    }
+
+    .modulenr {
+        width: 150px;
+    }
+
+    .updatedat {
+        width: 170px;
+    }
+
+    .lecturers {
+        width: 150px;
+    }
+
+    .eventovv span .hidden {
+        display: none !important;
+    }
+}

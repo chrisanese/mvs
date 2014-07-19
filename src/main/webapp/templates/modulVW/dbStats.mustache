@@ -1,0 +1,34 @@
+<div class="dvbStats mvsNavigation">
+	<script>
+	</script>
+	<div class="container-fluid">
+		<table>
+			<thead>
+				<tr>
+					<th>Name</th>
+					<th>Anzahl Datens&auml;tze</th>
+					<th>+</th>
+				</tr>
+			</thead>
+			<tbody>
+			{{#tables}}
+				<tr>
+					<td>{{tableName}}</td>
+					<td>{{tableCount}}</td>
+					<td></td>
+				</tr>
+			{{/tables}}
+			</tbody>
+		</table>
+		
+	</div>
+	<!-- =============================================== -->	
+	<!-- ====== START: Import Mustache-Partials ======== -->
+	<!-- =============================================== -->
+	{{>loginTemplate}}
+	{{>editModuleTemplate}}
+	{{>newLecturerTemplate}}
+	<!-- =============================================== -->	
+	<!-- ====== END: Import Mustache-Partials ======== -->
+	<!-- =============================================== -->
+</div>

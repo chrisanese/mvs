@@ -1,0 +1,107 @@
+html, body {
+	margin: 0;
+	padding: 0;
+	font-family: "Helvetica", "Arial", sans-serif;
+	font-size: 13pt;
+}
+
+h1 {
+	margin: 0;
+	width: 100%;
+	padding: .5em;
+	background: #666699;
+	color: white;
+	border-bottom: 2px solid black;
+}
+
+
+h2 {
+	margin: 1em;
+}
+
+p {
+	margin: 1em;
+}
+
+label {
+	display: block;
+	float: left;
+	clear: left;
+	width: 150px;
+	height: 30px;
+}
+
+input[type='text'], input[type='password'], textarea {
+	width: 400px;
+	font-family: "Courier New", monospace;
+	font-size: 1em;
+}
+
+label.checkbox {
+	width: 400px;
+	margin-left: 150px;
+}
+
+small + textarea {
+	margin-left: 150px;
+}
+
+textarea {
+	height: 80px;
+	white-space: normal;
+}
+
+small label {
+	display: inline;
+}
+
+small input {
+	width: 130px;
+}
+
+form {
+	margin-left: auto;
+	margin-right: auto;
+	display: block;
+	width: 600px;
+}
+
+div.error, div.success {
+	padding-left: 40px;
+}
+
+.error:before {
+	content: "✘";
+	color: #990000;
+}
+
+.success:before {
+	content: "✔";
+	color: #009900;
+}
+
+div.error:before, div.success:before {
+	font-size: 2em;
+	display: block;
+	position: absolute;
+	margin-top: -10px;
+	margin-left: -25px;
+}
+
+hr {
+	clear: left;
+}
+
+.pane {
+	background: #e0e0e0;
+	padding-top: .4em;
+	padding-bottom: .4em;
+}
+
+#controls {
+	padding-top: 2em;
+}
+
+#controls > p {
+	font-weight: bold;
+}

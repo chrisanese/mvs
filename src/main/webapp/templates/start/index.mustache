@@ -1,0 +1,50 @@
+<h1>Welcome to Scuttle!</h1>
+
+<hr />
+<h2>Module</h2>
+
+<ul>
+	<li><a data-go="/ss2014:vintage">Vorlesungsverzeichnis SS 2014</a></li>
+	<li><a data-go="/kvv:index">Vorlesungsverzeichnis WS 2013 / 2014</a></li>
+	<li><a data-go="/events:index">Veranstaltungs- und Raumübersicht</a></li>
+    <li><a data-go="/eventoVV:index">Eventoübersicht</a></li>
+    <li><a data-go="/helloWorld:helloWorld">Hello, World!</a></li>
+    <li><a data-go="/modulVW:index">Modulverwaltung</a></li>
+</ul>
+
+<hr />
+{{#loggedIn}}
+<h2>Admin-Module {{#loggedIn}}
+	<small>(<a data-do="Scuttle.logout()">Logout</a>)</small>{{/loggedIn}}</h2>
+
+<ul>
+	<li><a data-go="/sakaiLink:index">SakaiLink</a></li>
+	<li><a data-go="/eventoLink:index">EventoLink</a></li>
+	<li><a data-go="/editorMenu:index">Skizzen-Editor</a></li>
+
+</ul>
+{{/loggedIn}}
+
+{{^loggedIn}}
+<form class="loginForm" data-go="/start:index" data-to="/start">
+
+<div>
+<label>
+	<span>Benutzer:</span>
+	<input type="text" name="loginName" />
+</label>
+</div>
+
+<div>
+<label>
+	<span>Passwort:</span>
+	<input type="password" name="loginPassword" />
+</label>
+</div>
+
+<div>
+	<input type="submit" value="Einloggen" />
+</div>
+
+</form>
+{{/loggedIn}}

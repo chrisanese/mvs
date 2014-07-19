@@ -1,0 +1,60 @@
+CREATE TABLE `SAKVV_LV_TYP` (
+  `AKRONYM` varchar(16) NOT NULL,
+  `NAME` varchar(64) NOT NULL,
+  PRIMARY KEY (`AKRONYM`),
+  UNIQUE KEY `NAME` (`NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+mysql> SELECT * FROM SAKVV_LV_TYP;
++---------+-----------------------+
+| AKRONYM | NAME                  |
++---------+-----------------------+
+| FS      | Forschungsseminar     |
+| HPT S   | Hauptseminar          |
+| K       | Kurs                  |
+| PRA     | Praktikum             |
+| PK      | Projektkurs           |
+| PS      | ProSeminar            |
+| S       | Seminar               |
+| S/PRA   | Seminar mit Praktikum |
+| SWP     | Softwareprojekt       |
+| Ü       | Übung                 |
+| VL      | Vorlesung             |
+| VL+P    | Vorlesung+Projekt     |
++---------+-----------------------+
+
+Kernfach
+Vertiefung
+Allgemeine Berufsvorbereitung
+Nebenfach
+
+Lehramtsbezogene Berufswissenschaft
+
+Fach 1
+Fach 2
+
+Forschungsseminar
+
+CREATE TABLE `SAKVV_STUDIENART` (
+  `AKRONYM` varchar(8) NOT NULL,
+  `NAME` varchar(64) NOT NULL,
+  PRIMARY KEY (`AKRONYM`),
+  UNIQUE KEY `NAME` (`NAME`)
+) ENGINE=InnoDB DEFAULT CHARSET=utf8
+
+mysql> SELECT * FROM SAKVV_STUDIENART;
++---------+-------------------------------------+
+| AKRONYM | NAME                                |
++---------+-------------------------------------+
+| ABV     | Allgemeine Berufsvorbereitung       |
+| F1      | Fach 1                              |
+| F2      | Fach 2                              |
+| FS      | Forschungsseminar                   |
+| K       | Kernfach                            |
+| LBW     | Lehramtsbezogene Berufswissenschaft |
+| N       | Nebenfach                           |
+| offen   | offen                               |
+| V       | Vertiefung                          |
++---------+-------------------------------------+
+
+

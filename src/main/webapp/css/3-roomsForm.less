@@ -1,0 +1,42 @@
+.roomsForm {
+
+    ul {
+        padding: 0;
+        margin: 0;
+    }
+    
+    ul.box li {
+        z-index: 100;
+    }
+
+    li {
+        display: block;
+        width: 150px;
+        border: 2px solid @fu-gruen;
+        list-item-style: none;
+        margin: 4px;
+        padding: 2px;
+        background-color: white;
+    }
+    
+    li.draggable:hover {
+        background-color: black;
+        color: white;
+    }
+
+    #scuttleRooms {
+        position: fixed;
+    }
+    
+    #scuttleRoomsBox {
+        width: 483px;
+        height: 600px;
+        padding: 0 10px 10px 10px;
+        background-color: @fu-grau6; 
+        overflow: auto;
+        overflow-y: scroll;
+        overflow-x: hidden;
+        border: 1px solid @fu-hellblau;
+    }
+
+}

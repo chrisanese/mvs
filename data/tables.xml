@@ -1,0 +1,145 @@
+<!DOCTYPE tables SYSTEM "tables.dtd">
+
+<tables>
+
+    <table name="building">
+        <title lang="de" plural="Gebäude">Gebäude</title>
+        <title lang="en" plural="buildings">building</title>
+
+        <attr name="title" />
+        <attr name="street_address" />
+    </table>
+
+    <table name="building_floor">
+        <title lang="de" plural="Etagen">Etage</title>
+        <title lang="en" plural="floors">floor</title>
+
+        <attr name="building" ref="building" />
+        <attr name="title" />
+    </table>
+
+    <table name="room">
+        <title lang="de" plural="Räume">Raum</title>
+        <title lang="en" plural="rooms">room</title>
+
+        <attr name="building_floor" ref="building_floor" />
+
+        <attr name="title" />
+        <attr name="key" />
+        <attr name="data" />
+        <attr name="notes" />
+    </table>
+
+    <table name="room_thingie">
+        <attr name="building_floor" ref="building_floor" />
+        <attr name="room" ref="room" debt="optional" />
+
+        <attr name="title" />
+        <attr name="key" />
+
+        <attr name="x" type="int" />
+        <attr name="y" type="int" />
+        <attr name="width" type="int" />
+        <attr name="height" type="int" />
+    </table>
+
+    <table name="room_feature">
+        <title lang="de" plural="Merkmale">Merkmal</title>
+        <title lang="en" plural="features">feature</title>
+
+        <attr name="title" />
+    </table>
+
+    <table name="room_has_feature">
+        <attr name="room" ref="room" />
+        <attr name="feature" ref="room_feature" />
+        <attr name="quantity" type="int" />
+
+        <key unique="room feature" />
+        <key index="feature" />
+    </table>
+
+    <table name="day">
+        <title lang="de" plural="Wochentage">Wochentag</title>
+        <title lang="en" plural="weekdays">weekday</title>
+ 
+        <attr name="title" />
+    </table>
+
+    <table name="timeslot">
+        <title lang="de" plural="Zeitpunkte">Zeitpunkt</title>
+        <title lang="en" plural="points in time">point in time</title>
+
+        <attr name="title" />
+    </table>
+
+    <table name="reservation">
+        <key unique="room time" />
+        <attr name="room" ref="room" />
+        <attr name="time" ref="timeslot" />
+    </table>
+
+    <table name="preliminary_reservation">
+        <key unique="room time" />
+        <attr name="room" ref="room" />
+        <attr name="time" ref="timeslot" />
+        <attr name="owner" ref="person" />
+    </table>
+
+    <table name="reservation_wish">
+        <key unique="room time owner" />
+        <key unique="time owner" />
+        <attr name="room" ref="room" />
+        <attr name="time" ref="timeslot" />
+        <attr name="owner" ref="person" />
+    </table>
+
+    <table name="person">
+        <attr name="first_name" />
+        <attr name="last_name" />
+        <attr name="display_name" />
+
+        <attr name="room" ref="room" debt="optional" />
+    </table>
+
+    <table name="person_attribute">
+        <key unique="name" />
+
+        <attr name="name" />
+        <attr name="type" />
+    </table>
+
+    <table name="person_has_attribute">
+        <key unique="person attribute" />
+
+        <attr name="attribute" ref="person_attribute" />
+        <attr name="person" ref="person" />
+        <attr name="value" />
+    </table>
+
+    <table name="template">
+        <key unique="name" />
+
+        <attr name="name" />
+        <attr name="content" type="text" />
+        <attr name="style" type="text" />
+    </table>
+
+    <table name="partial_template">
+        <key unique="name" />
+
+        <attr name="name" />
+        <attr name="content" type="text" />
+        <attr name="style" type="text" />
+    </table>
+
+    <table name="lang_string">
+        <key index="name" unique="name lang" />
+
+        <attr name="name" />
+        <attr name="lang" maxlen="5" />
+        <attr name="value" />
+    </table>
+
+</tables>
+

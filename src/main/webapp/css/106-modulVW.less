@@ -1,0 +1,743 @@
+@mVWHellblau: #428bca;
+@mVWDunkelblau: #036;
+
+.moduleVV {
+	
+	table{
+		border-collapse: collapse;
+		table-layout: fixed;
+	}
+	
+	div.course {
+		border: 2px solid @fu-blau;
+		border-radius: 5px;
+		position: relative;
+		margin-bottom: 10px;
+	}
+	
+	div.text{
+		display: block;
+		margin-left: 5px;
+		margin-right: 5px;
+	}
+	
+	table.course {
+		width: 100%;
+		border: 0 solid white !important;		
+	}
+	
+	td, th {
+		border: 1px solid @fu-blau;
+		padding: 0;
+		margin: 0;
+		height: 30px;
+	}
+	
+	td.date, td.building {
+		width: 160px;
+	}
+	
+	td.type {
+		width: 90px;
+		text-align: center;
+	}
+	
+	span.date, span.building {
+	      display: block;
+        text-align: center;
+        font-size: 10px;
+        line-height: 10px;
+	}
+	
+	tr.content td{
+		margin: 10px;
+		width: 100%;
+		word-wrap:break-word;
+	}
+	
+	tr.schedule {
+		text-align: center;
+	}
+	tr.meta {
+		td{
+			text-align: center;
+		}
+	}
+	
+	.hidden {
+		display: none;
+	}
+	
+	/* Seitliches NavigationsMenu anfang */
+	.subject-nav {
+        top: 0;
+        left: 0;
+        position: fixed;
+        border: 2px solid @fu-blau;
+        border-radius: 5px;
+        margin: 0;
+        background: white;
+        z-index: 100;
+    }
+
+    .subject-nav ul {
+        list-style-type: none;
+        padding: 0;
+        display: none;
+    }
+
+    .subject-nav ul li {
+        margin: 5px;
+    }
+
+    .menu-expander:hover ul {
+        display:block;
+    }
+
+    .menu-expander:before {
+        content: ">>";
+        width: 80px;
+        text-align: center;
+        font-weight: bold;
+        font-size: 30px;
+        line-height: 30px;
+        vertical-align: baseline;
+        color: #06c;
+    }
+	
+	/* Seitliches NavigationsMenu ende */
+}
+
+.longTermSchedule{
+	
+	div.module {
+		border: 2px solid @fu-blau;
+		border-radius: 5px;
+		position: relative;
+		margin-bottom: 10px;
+		display: block;
+	}
+	
+	th.modulTitel{
+		min-width: 350px;
+		max-width: 350px;
+	}
+	
+	th.modulSemesters{
+	 	min-width: 99px;
+		max-width: 99px;
+	}
+	
+	td, th{
+		border: 1px solid @fu-blau;
+		padding: 0;
+		margin: 0;
+		height: 30px;
+		white-space: nowrap;
+		align: center;
+	}
+	
+	span.text{
+		display: block;
+		font-size: 10px;
+		margin-left: 5px;
+		margin-right: 5px;
+	}
+	
+	.courseType{
+		text-align: left;
+		padding-left: 20px;
+		min-width: 70px;
+		max-width: 70px;
+	}
+	
+	.courseSws{
+		text-align: center;
+	}
+	
+	.moduleTable{
+		border-spacing: 0;
+	}
+	
+	.modulNummer, .courseNumber {
+		min-width: 70px;
+		max-width: 70px;
+		padding-left: 20px;
+	}
+	
+	.yupp{
+		background-color: @fu-blau;
+	}
+	
+	.hidden{
+		display: none;
+	}
+	
+	.state-success{
+		border: 1px solid @fu-gruen;
+		background-color: #CDF8A5;
+	}
+}
+
+.newModule{
+	
+	
+	/**
+	  * Navbar styling
+	  */
+	  nav#topNavigation{
+	 	background-color: @mVWHellblau;
+	 	a{
+	 		color: #fff;
+	 	}
+	 	border-bottom: 0px;
+	 }
+	 
+	 #topNavigation a:hover{
+	 	background-color: @mVWDunkelblau;
+	 }
+	 
+	 #topNavigation li.active > a, #topNavigation li.active > a:hover{
+	 	background-color: #fff;
+	 	color: @mVWHellblau;
+	 }
+	 
+	 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus{
+	 	background-color: @mVWDunkelblau;
+	 }
+	 
+	 .navbar-nav>li>.dropdown-menu{
+	 	background-color: @mVWHellblau;
+	 }
+	 
+	 #topNavigation li.open li a{
+	 	background-color: @mVWHellblau;
+	 	colro: #fff;
+	 }
+	 #topNavigation li.open li a:hover{
+	 	background-color: #fff;
+	 	color: @mVWHellblau;	
+	 }
+
+	.moduleInfo{
+		border: 2px solid @fu-blau;
+		border-radius: 10px;
+		position: relative;
+		margin-bottom: 10px;
+		display: block;
+		
+		legend{
+			font: 30px/17px "Helvetica", "Arial";
+			color: @fu-hellblau;
+			margin: 0px 20px 20px 10px;
+		}
+		
+		.moduleFormTitle{
+			font-size: 20px;
+			font-weight: bold;
+			border: 1px solid @fu-blau;
+			border-radius: 10px;
+	 		margin: 10px 20px 10px 30px;
+	 		padding-left: 10px;
+	 		height: 30px;
+	 		min-width: 500px;
+	 		max-width: 500px;	 	
+	 	}
+		
+		.dropdownForm{
+	 		margin: 0;
+	 		line-height: 30px;
+	 		margin: 10px 10px 10px 30px;
+	 		padding: 0 0 0 10px;
+	 		border: 1px solid @fu-grau7;
+	 		border-radius: 10px;
+	 		height: 30px;
+	 		font-size: 18px;
+	 	}
+	 	
+	 	#ectsForm{
+	 		font-size: 18px;
+	 		margin: 5px 0px 5px 20px;
+	 		min-width: 100px;
+	 		max-width: 100px;
+	 	}
+	 	
+	 	select:hover{
+	 		background-color: #0066cc;
+	 		color: white;
+	 	}
+	 	
+	 	.formLabel{
+	 		font: 24px/17px "Helvetica", "Arial";
+			color: @fu-hellblau;
+			margin: 10px 20px 10px 10px;
+			
+			.ectsLabel{
+				margin: 0px 0px 0px 60px;
+			}
+			
+			.languageLabel {
+				margin: 0px 0px 0px 100px;
+			}
+	 	}
+	 	.moduleFormTextArea{
+	 		font: 18px/17px "Helvetica", "Arial";
+	 		border: 1px solid @fu-blau;
+			border-radius: 10px;
+	 		margin: 10px 20px 10px 30px;
+	 		padding: 10px;
+	 		min-width: 800px;
+	 		max-width: 800px;
+	 		min-height: 300px;
+	 		max-height: 300px;
+	 	}
+	 	
+	 	.ui-spinner{
+	 		margin: 10px 0px 15px 20px;
+	 	}
+	 	
+	 	.swsForm{
+	 		font-size: 18px;
+	 	}
+	 	
+	 	#addCourse, #addResponsible{
+	 		margin: 10px 0px 15px 10px;
+	 		width: 10px;
+			height: 10px;
+	 	}
+	 	
+	 	.hidden{
+	 		display: none;
+	 	}
+	 	
+	 	#courseList, #responsiblesList{
+	 		font-size: 18px;
+	 		margin: 10px 20px 10px 30px;
+	 		border-spacing: 10px;
+	 		color: @fu-blau;
+	 	}
+	 	
+	 	#addModule{
+	 		min-width: 200px;
+	 		height: 30px;
+	 		border: 1px solid #1AAD0D;
+	 		border-radius: 10px;
+	 		margin: 10px 20px 10px 30px;
+	 		padding: 10px;
+	 		max-width: 200px;
+	 		background-color: @fu-gruen;
+	 		font: 18px/17px "Helvetica", "Arial";
+	 		color: white;
+	 	}
+	 	
+		.btn-circle {
+			border-radius: 15px;
+		}
+		
+		#verantwortlichenListe > table > thead > tr> th{
+			font-size: 16px;
+		}
+		
+		div#verantwortlichenListe, div#lvListe{
+			min-width: 800px;
+			max-width: 800px;
+			margin: 10px 20px 10px 30px;
+			border-radius: 10px;
+		}
+		.panel-title{
+			font-size: 24px;
+		}
+		
+		#lvSws{
+			width: 50px;
+		}
+	 }
+	 
+	.state-success{
+		border: 1px solid @fu-gruen;
+		background-color: #CDF8A5;
+	}
+	
+	option.dropdown-option{
+		color: #0066cc;
+	}
+}
+
+.categoryDialog{
+	.dialogLabel{
+		font: 24px/17px "Helvetica", "Arial";
+		color: @fu-hellblau;
+		margin: 10px 20px 10px 10px;
+	}
+	
+	select{
+	 	margin: 0;
+	 	line-height: 30px;
+	 	margin: 10px 10px 10px 30px;
+	 	padding: 0 0 0 10px;
+	 	border: 1px solid @fu-grau7;
+	 	border-radius: 10px;
+	 	height: 30px;
+	 	font-size: 18px;
+	 }
+	 
+	 input{
+	 	font-size: 20px;
+		font-weight: bold;
+		border: 1px solid @fu-blau;
+		border-radius: 10px;
+	 	margin: 10px 20px 10px 30px;
+	 	padding-left: 10px;
+	 	height: 30px;
+	 	min-width: 400px;
+	 	max-width: 400px;	
+	 }
+}
+
+.lecturerSite{
+	
+	.hidden{
+		display: none;
+	}
+	
+	table{
+		border-collapse: collapse;
+		table-layout: fixed;
+		
+		.head {
+			background-color: @fu-hellblau;
+		}
+	}
+	
+	div.course {
+		border: 2px solid @fu-blau;
+		border-radius: 5px;
+		position: relative;
+		margin-bottom: 10px;
+	}
+	
+	.text{
+		display: block;
+		margin-left: 5px;
+		margin-right: 5px;
+	}
+	
+	.dates {
+		display: block;
+		margin-left: 5px;
+		font-size: 10px;
+	}
+	
+	.courseTitle{
+		align: center;
+	}
+
+}
+
+/**
+ * Section for alleModule.mustache
+ */
+.alleModule{
+	
+	
+	 .sidebar{
+	 	padding-left: 0px;
+	 }
+	 
+	 div.container-fluid.bodyContainer{
+	 	padding-left: 0px;
+	 	padding-right: 0px;
+	 	
+	 }
+	 
+	 nav#topNavigation{
+	 	background-color: @mVWHellblau;
+	 	a{
+	 		color: #fff;
+	 	}
+	 	border-bottom: 0px;
+	 }
+	 
+	 #topNavigation a:hover{
+	 	background-color: @mVWDunkelblau;
+	 }
+	 
+	 #topNavigation li.active a, #topNavigation li.active a:hover{
+	 	background-color: #fff;
+	 	color: @mVWHellblau;
+	 }
+	 
+	 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus{
+	 	background-color: @mVWDunkelblau;
+	 }
+	 
+	 .navbar-nav>li>.dropdown-menu{
+	 	background-color: @mVWHellblau;
+	 }
+	 
+	 small.td-fullwidth{
+	 	white-space: nowrap;
+	 }
+	 
+	 tr.module td {
+	 	vertical-align: middle;
+	 }
+	 
+	 #page{ padding-right: 0px;}
+	 
+	 #sto-title h2{
+	 	color: #fff;
+	 }
+	 
+	 #sidebar, #sidebar a{
+	 	background-color: @mVWHellblau;
+	 	color: #fff;
+	 }
+	 
+	 #sidebar a:hover{
+	 	background-color: @mVWDunkelblau;
+	 }
+	 
+	  #sidebar li.active a, #sidebar li.active a:hover{
+	 	background-color: #fff;
+	 	color: @mVWHellblau;
+	 }
+	 
+	 /* Login Form */
+	 #loginUname, #loginPw{
+	 	background-color: #fff;
+	 	padding-left: 10px;
+	 	border-radius: 5px;
+	 	margin-bottom: 10px;
+	 	color: @mVWDunkelblau;
+	 	height: 40px;	 	
+	 }
+	 #loginUname:-webkit-autofill,#loginPw:-webkit-autofill {
+	 	-webkit-box-shadow: 0 0 0px 1000px white inset;
+	 	background-color: #fff !important;	 	
+	 	background-color: @mVWHellblau;
+	 	padding-left: 10px;
+	 	border-radius: 5px;
+	 	margin-bottom: 10px;
+	 	color: #fff;
+	 }
+	 	 
+	 #logLink{
+	 	width: 40%;
+	 	background-color: #5cb85c;
+	 	color: white;
+	 	-webkit-transition: background-color 300ms linear;
+	 	transition: background-color 300ms linear;
+	 }
+	 
+	 #logLink:hover{
+	 	background-color: #99cc00;
+	 	opacity: 0.8;
+	 }
+	 
+	 input:-webkit-autofill{
+	 	background-color: #fff !important;
+	 }
+	 
+	 .navigationContainer, .wellContainer{
+	 	padding-right: 0px;
+	 }
+	 
+
+	 
+}
+
+/*
+ * Section for editModule.mustache
+ */
+ .editModule{
+ 	z-index: 1 !important;
+ 	
+ 	h2#editTitle{
+ 		color:	#fff;	
+ 	}
+ 	
+ 	table#tutTable th{
+ 		border-top: 1px;
+ 	}
+ 	
+ 	table#tutTable .labelRow>th{
+ 		background-color: @mVWHellblau;
+ 		color: #fff; 		
+ 	}
+ 	
+ 	p.editLabel{
+ 		color: #0066cc;
+ 		font-size: 18px;
+ 		font-weight: bold;
+ 		padding-top: 5px;
+ 		
+ 		white-space: nowrap;
+ 	}
+ 	
+ 	p.tutorienLabel, p.lvLabel{
+ 		color: #0066cc;
+ 		font-size: 18px;
+ 		font-weight: bold;
+ 		margin-top: 25px;
+ 	}
+ 	
+ 	.editModule .linkIcons>span.glyphicon{
+ 		font-size: 14px;
+ 	}
+ 	
+ 	a.editLecturer{
+ 		margin-top: 5px;
+ 		margin-left: 25px;
+ 		font-size: 14px;
+ 	}
+ 	
+ 	.tutorium > span{
+ 		margin-right: 20px;
+ 	}
+ 	
+ 	.btn-circle {
+		border-radius: 15px;
+	}
+	
+	div#tutorien, div#lvs, div#klausuren{
+		max-width: 800px;
+		margin-top:	15px;
+		margin-left: 25px;
+	}
+	
+	div.row.tutorium, div.row.lv, div.row.klausur, div#modInhalt, div#modLiteratur, div#modLiteratur{
+		margin-top: 5px;
+		margin-bottom: 5px;
+		vertical-align: middle;
+	}
+	
+	.linkIcons >span.glyphicon{
+		color: #000;
+	}
+	
+	.datepicker{
+		z-index: 100000 !important;
+	}
+	
+
+	/* Top Navigation */
+	 nav#topNavigation{
+	 	background-color: @mVWHellblau;
+	 	a{
+	 		color: #fff;
+	 	}
+	 	border-bottom: 0px;
+	 }
+	 
+	 #topNavigation a:hover{
+	 	background-color: @mVWDunkelblau;
+	 }
+	 
+	 #topNavigation li.active a, #topNavigation li.active a:hover{
+	 	background-color: #fff;
+	 	color: @mVWHellblau;
+	 }
+	 
+	 .navbar-nav>li>.dropdown-menu{
+	 	background-color: @mVWHellblau;
+	 }
+	 
+	 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus{
+	 	background-color: @mVWDunkelblau;
+	 }
+	
+}
+
+.langfristplanung{
+	/*
+	 * Table Styling
+	 */
+	 .table td > small{
+	 	display: block;
+	 }
+	 
+	 .table th.mName {
+	 	widht: 25%;
+	 }
+	 
+	 .table th.mSemester {
+	 	widht: 15%;
+	 }
+	 
+	 .panel-mvs >.panel-heading,.panel-mvs >.panel-heading>.panel-title{
+	 	background-color: @mVWHellblau;
+	 	color: #fff !important;
+	 }
+	 
+	 .keineL{
+	 	background-color: @mVWDunkelblau;
+	 	opacity: 0.5;
+	 }
+	 
+	 header{
+	 	margin-bottom: 30px;
+	 }
+	 
+	 /**
+	  * Navbar styling
+	  */
+	  nav#topNavigation{
+	 	background-color: @mVWHellblau;
+	 	a{
+	 		color: #fff;
+	 	}
+	 	border-bottom: 0px;
+	 }
+	 
+	 #topNavigation a:hover{
+	 	background-color: @mVWDunkelblau;
+	 }
+	 
+	 #topNavigation li.active > a, #topNavigation li.active > a:hover{
+	 	background-color: #fff;
+	 	color: @mVWHellblau;
+	 }
+	 
+	 .navbar-default .navbar-nav>.open>a, .navbar-default .navbar-nav>.open>a:hover, .navbar-default .navbar-nav>.open>a:focus{
+	 	background-color: @mVWDunkelblau;
+	 }
+	 
+	 .navbar-nav>li>.dropdown-menu{
+	 	background-color: @mVWHellblau;
+	 }
+	 
+	 #topNavigation li.open li a{
+	 	background-color: @mVWHellblau;
+	 	colro: #fff;
+	 }
+	 #topNavigation li.open li a:hover{
+	 	background-color: #fff;
+	 	color: @mVWHellblau;	
+	 }
+	 
+}
+
+.firstlogin{
+	a#pwdSpeichern{
+		color: #fff;
+	}
+}
+
+/*#mvsMenu {
+	position: absolute;
+    top: 40px;
+    left: 50%;
+    width: 625px;
+    margin-left: -200px;
+    text-align: right;
+}*/
+
+#mvsMenu .popover{
+	width: 300px;
+}
+
+#mvsMenu .popver-title{
+	background-color: @mVWHellblau;
+	color: #fff;
+}

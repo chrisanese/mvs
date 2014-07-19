@@ -1,0 +1,70 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<persistence xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+	xsi:schemaLocation="http://java.sun.com/xml/ns/persistence http://java.sun.com/xml/ns/persistence/persistence_2_0.xsd"
+	version="2.0" xmlns="http://java.sun.com/xml/ns/persistence">
+
+	<persistence-unit name="scuttle" transaction-type="RESOURCE_LOCAL">
+
+		<class>de.fu.mi.scuttle.domain.ScuttleEntity</class>
+		<class>de.fu.mi.scuttle.domain.ScuttleBaseEntity</class>
+
+		<class>de.fu.mi.scuttle.domain.AcademicTerm</class>
+		<class>de.fu.mi.scuttle.domain.Building</class>
+		<class>de.fu.mi.scuttle.domain.BuildingFloor</class>
+		<class>de.fu.mi.scuttle.domain.BuildingFloorAnyFeature</class>
+		<class>de.fu.mi.scuttle.domain.Configuration</class>
+		<class>de.fu.mi.scuttle.domain.Day</class>
+		<class>de.fu.mi.scuttle.domain.Event</class>
+		<class>de.fu.mi.scuttle.domain.EventTakesPlace</class>
+		<class>de.fu.mi.scuttle.domain.Room</class>
+		<class>de.fu.mi.scuttle.domain.RoomAnyFeature</class>
+		<class>de.fu.mi.scuttle.domain.RoomFeature</class>
+		<class>de.fu.mi.scuttle.domain.RoomLabel</class>
+		<class>de.fu.mi.scuttle.domain.RoomHasFeature</class>
+		<class>de.fu.mi.scuttle.domain.SingletonEvent</class>
+		<class>de.fu.mi.scuttle.domain.Timeslot</class>
+		<class>de.fu.mi.scuttle.domain.User</class>
+
+		<class>de.fu.mi.scuttle.domain.SakaiUptime</class>
+
+		<class>de.fu.mi.scuttle.domain.misc.Password</class>
+
+		<class>de.fu.mi.scuttle.domain.misc.SakvvRoomToScuttleRoom</class>
+		
+		<class>de.fu.mi.scuttle.domain.modulVW.FachbereichEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.GebaeudeEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.HuelsenEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.InstitutEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.KlausurEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.KlausurTypEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.LecturerEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.LecturerTypEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.LehrveranstaltungEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.LvTypEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.ModulCounterEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.ModulEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.ModulHuelsenEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.ModulKategorieEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.ModulLvsEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.ModulVerantwortlicheEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.PlanungEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.RaumEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.RolesEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.SekStoEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.SemesterEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.SemesterLecturerEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.SprachenEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.StoModulEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.StudienartEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.StudienordnungEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.TerminEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.UebungEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.UebungPlanungEntity</class>
+		<class>de.fu.mi.scuttle.domain.modulVW.UserRolesEntity</class>		
+		<class>de.fu.mi.scuttle.domain.modulVW.UsersEntity</class>	
+		
+
+		<shared-cache-mode>ENABLE_SELECTIVE</shared-cache-mode>
+
+	</persistence-unit>
+</persistence>

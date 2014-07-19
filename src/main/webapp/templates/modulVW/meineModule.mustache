@@ -1,0 +1,141 @@
+<div class="meineModule mvsNavigation">
+	<script>
+	</script>
+	<p id="mvsExport">
+	{{#loginname}}
+		Export: 
+		<a href="/mvs/backend/modulVW/export/semester/3" target="_blank">SS14</a>  |  
+		<a href="/mvs/backend/modulVW/export/semester/4" target="_blank">WS14/15</a>
+		Detaillierter Export:
+		<a href="/mvs/backend/modulVW/detailed/semester/3" target="_blank">SS14</a>  |  
+		<a href="/mvs/backend/modulVW/detailed/semester/4" target="_blank">WS14/15</a> 
+	{{/loginname}}
+	</p>
+	<!-- start: navbar -->
+	<nav class="navbar navbar-default" role="navigation" id="topNavigation">
+		<div class="container-fluid navigation-container">
+			<div class="navbar-header">
+				<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#bs-example">
+					<span class="sr-only">Toggle Navigation</span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>
+					<span class="icon-bar"></span>				
+				</button>
+				<a class="navbar-brand" data-go="//moduleListe:allModule">MVS</a>
+			</div>
+			<!-- start: Nav -->
+			<div class="collapse navbar-collapse" id="bs-example">
+				<ul class="nav navbar-nav">
+					<li class="active"><a data-go="//moduleListe:allModule">Alle Veranstaltungen</a></li>
+					<li><a {{#loginname}}data-go="//meineModule:meineModule"{{/loginname}}>Meine  Veranstaltungen</a></li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Langfristplanung <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a {{#loginname}}data-go="//langfristPlanung/7/3/:langfristplanung"{{/loginname}}>Informatik</a></li>	
+							<li class="divider"></li>
+							<li><a {{#loginname}}data-go="//langfristPlanung/8/3/:langfristplanung"{{/loginname}}>Mathematik</a></li>
+							<li class="divider"></li>
+							<li><a {{#loginname}}data-go="//langfristPlanung/10/3/:langfristplanung"{{/loginname}}>Physik</a></li>
+							<li class="divider"></li>
+							<li><a {{#loginname}}data-go="//langfristPlanung/11/3/:langfristplanung"{{/loginname}}>Bioinformatik</a></li>				
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Modulverwaltung <b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a {{#loginname}}data-go="//newModule:neuesModul"{{/loginname}}>Neues Modul</a></li>
+							<li><a {{#loginname}}data-toggle="modal" data-target=".mod-editModule-modal"{{/loginname}}>Modul Bearbeiten</a></li>
+							<li><a {{#loginname}}data-go="//newCourse:newCourse"{{/loginname}}>Neue Veranstaltung</a></li>
+							<li><a {{#loginname}}data-toggle="modal" data-target=".mod-lecturer-modal"{{/loginname}}>Neuer Dozent</a></li>
+						</ul>
+					</li>
+					<li class="dropdown">
+						<a href="#" class="dropdown-toggle" data-toggle="dropdown">Einstellungen<b class="caret"></b></a>
+						<ul class="dropdown-menu">
+							<li><a {{#loginname}}data-toggle="modal" data-target=".mod-sto-modal"{{/loginname}}>Neue Studienordnung anlegen</a></li>
+							<li><a href="#">DB-Daten</a></li>
+						</ul>
+					</li>
+				</ul>
+				<form class="navbar-form navbar-right">
+					<div class="form-group">
+						<input type="text" class="form-control" placeholder="Suche" id="searchbar">									
+					</div>
+				</form>
+			</div>
+		<!-- end: nav -->
+		</div>
+	</nav>
+	<!-- end: navbar -->
+	<div class="container-fluid bodyContainer">
+	{{^loginname}}
+	<div class="alert alert-danger text-center">
+		<strong>FEHLER</strong><br>
+		Sie m&uuml;ssen eingeloggt sein.
+	</div>
+	{{/loginname}}
+	{{#loginname}}
+		{{#currentSem}}
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h2 class="panel-title text-center">Lehrveranstaltungen im {{sName}}</h2>			
+			</div>
+			<table class="table table-hover table-responsive">
+				<thead>
+					<tr>
+						<th>Lv-Nr</th>
+						<th colspan="3">Name</th>
+					</tr>			
+				</thead>
+				<tbody>
+				{{#lvs}}
+					<tr>
+						<td>{{lvNummer}}</td>
+						<td  colspan="3">
+							<a {{#loginname}}data-go="//planLv/{{lvId}}/{{sId}}/:lvPlanung"{{/loginname}}>{{lvName}}</a>
+						</td>
+					</tr>
+				{{/lvs}}
+				</tbody>
+			</table>
+			</div>
+		{{/currentSem}}
+		{{#nextSem}}
+		<div class="panel panel-primary">
+			<div class="panel-heading">
+				<h2 class="panel-title text-center">Lehrveranstaltungen im {{sName}}</h2>			
+			</div>
+			<table class="table table-hover table-responsive">
+				<thead>
+					<tr>
+						<th>Lv-Nr</th>
+						<th colspan="3">Name</th>
+					</tr>			
+				</thead>
+				<tbody>
+				{{#lvs}}
+					<tr>
+						<td>{{lvNummer}}</td>
+						<td  colspan="3">
+							<a {{#loginname}}data-go="//planLv/{{lvId}}/{{sId}}/:lvPlanung"{{/loginname}}>{{lvName}}</a>
+						</td>
+					</tr>
+				{{/lvs}}
+				</tbody>
+			</table>
+		</div>
+		{{/nextSem}}
+	{{/loginname}}
+	</div> <!-- End Body Container -->
+	
+</div>
+<!-- ======================== -->
+<!-- IMPORT template-partials -->
+<!-- ======================== -->
+{{>loginTemplate}}
+{{>editModuleTemplate}}
+{{>newLecturerTemplate}}
+{{>newSTOTemplate}}
+<!-- ======================== -->
+<!-- IMPORT template-partials -->
+<!-- ======================== -->

@@ -1,0 +1,119 @@
+mysql> SELECT DISTINCT HAUS, RAUM FROM SAKVV_ORT;
++---------+------------------+
+| HAUS    | RAUM             |
++---------+------------------+
+| T9      | Großer Hörsaal   |
+| T9      | SR 049           |
+| T9      | SR 051           |
+| T9      | K 040            |
+| KL24-26 | SR 016           |
+| offen   | offen            |
+| FAB15   | R 013            |
+| T9      | SR 055           |
+| T9      | SR 137           |
+| A7      | SR E.31          |
+| A3      | HS 001           |
+| T9      | SR 005           |
+| T9      | SR 006           |
+| T9      | SR 046           |
+| T9      | K 063            |
+| T9      | SR 053           |
+| KL24-26 | SR 006           |
+| A7      | SR 140           |
+| A7      | SR 009           |
+| T9      | K 046            |
+| T9      | K 048            |
+| T9      | SR 159           |
+| HA45    | L 116            |
+| A22     | Hörsaal B        |
+| T9      | K 63             |
+| T9      | K63              |
+| A6      | SR 032           |
+| A3      | SR 119           |
+| T9      | K46              |
+| A6      | SR 007/008       |
+| A3      | SR 005           |
+| A3      | Hörsaal 001      |
+| A14     | Hörsaal B        |
+| A6      | SR 009           |
+| A6      | SR 031           |
+| A6      | SR 025/026       |
++---------+------------------+
+
+
+36 rows in set (0.00 sec)
+
+mysql> SELECT DISTINCT VALUE FROM SAKAI_SITE_GROUP_PROPERTY WHERE NAME = 'sections_location';
++-----------------------+
+| VALUE                 |
++-----------------------+
+| T9 - SR 053           |
+| T9 - SR 049           |
+| T9 - SR 055           |
+| 19.11. T9 - SR 049    |
+| V6 SR 051             |
+| V8 SR 051             |
+| T9 - SR 051           |
+| T9 - SR 006           |
+| V9 SR 051             |
+| A7 - SR 140           |
+| T9 - SR 046           |
+| K48                   |
+| T9 - SR 005           |
+| T9 SR 006             |
+| 17.12. T9 - SR 049    |
+| 17.01. T9 - SR 049    |
+| V11 SR 051            |
+| A7 - SR E.31          |
+| T9 - SR ??            |
+| nowhere               |
+| V5 SR 051             |
+| T9 - SR               |
+| V10 SR 051            |
+| V2 SR 051             |
+| T9.037                |
+| T9 - SR005            |
+| Takustraße 9; SR 005  |
+| 28.10.  T9 - SR 049   |
+| nirgendwo             |
+| A6 - SR 009           |
+| K36                   |
+| T9 - K63              |
+| V1   SR 051           |
+| V3   SR 051           |
+| 10.12. T9 - SR 049    |
+| K46                   |
+| L 116 Seminarzentrum  |
+| 21.01. T9 - SR 049    |
+| T9 - Poolraum 2       |
+| A3 -SR 210            |
+| T9 SR 055             |
+| T9 - Poolraum 3       |
+| 07.01. T9 - SR 049    |
+| V4 SR 051             |
+| 12.11. T9 - SR 049    |
+| A14 - 1.4.31 E3       |
+| A6 - SR 007/008       |
+| T9 - K 40             |
+| A6 - SR 031           |
+| V7 SR 051             |
+| 26.11. T9 - SR 049    |
+| T9 - Poolraum 4       |
+| 05.11. T9 - SR 049    |
+| A3 - SR 119           |
+| A 6 SR 025/026        |
+| 28.01. T9 - SR 049    |
+| 03.12. T9 - SR 049    |
+| A14 SR E2 (1.1.53)    |
+| T9 - Poolraum 1       |
+| 14.01. T9 - SR 049    |
+| T3 - SR 1.3.48        |
+| A14 SR T3 (1.3.48)    |
+| T9 SR 051             |
+| A14 SR E1 (1.1.26)    |
+| A3 - SR 005           |
+| A14 -                 |
+| 04.02. T9 - SR 049    |
++-----------------------+
+67 rows in set (0.09 sec)
+
